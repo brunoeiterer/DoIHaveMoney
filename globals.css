@@ -1,0 +1,9 @@
+body {
+  background-color: var(--mantine-color-indigo-6);
+  color: var(--mantine-color-text);
+  min-height: 100vh;
+}
+
+body {
+  transition: background-color 150ms ease, color 150ms ease;
+}

@@ -1,0 +1,15 @@
+{
+    "LandingPage": {
+        "slogan": "Budgeting for <highlight>Modern Households</highlight>",
+        "getStarted": "Get Started"
+    },
+
+    "AddExpense": {
+        "pageTitle": "Add Expense",
+        "labelDescription": "Description",
+        "labelAmount": "Amount",
+        "labelDate": "Date",
+        "labelCategory": "Category",
+        "saveButton": "Submit"
+    }
+}
