@@ -1,32 +1,21 @@
 'use client';
 
-import {
-    TextInput,
-    PasswordInput,
-    Checkbox,
-    Anchor,
-    Paper,
-    Title,
-    Text,
-    Container,
-    Group,
-    Button,
-    Stack,
-    Box,
-    Alert
-} from '@mantine/core';
+import { TextInput, PasswordInput, Anchor, Paper, Title, Text, Container, Group, Button, Stack, Box, Alert} from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { MdErrorOutline, MdLogin } from 'react-icons/md';
 import { createClient } from '@/lib/supabase/browser-client';
 import { useState } from 'react';
+import PasswordCriteria from '@/components/PasswordCriteria/PasswordCriteria';
 
-export default function LoginPage() {
-    const t = useTranslations('Login');
+export default function SignupPage() {
+    const t = useTranslations('Signup');
     const [error, setError] = useState<string | null>();
+    const [areAllCriteriaMet, setAreAllCriteriaMet] = useState<boolean>(false);
+    const pathname = usePathname();
     const router = useRouter();
-    const [isSubmitting, setisSubmitting] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const form = useForm({
         initialValues: {
@@ -36,38 +25,33 @@ export default function LoginPage() {
     });
 
     const onSubmit = async (email: string, password: string) => {
-        setisSubmitting(true);
+        setIsSubmitting(true);
         const client = createClient();
-        const { data, error } = await client.auth.signInWithPassword({
+        const { data } = await client.auth.signUp({
             email: email,
             password: password
         });
 
         if(data?.user === null) {
-            if(error?.code === 'invalid_credentials') {
-                setError(t('invalidCredentials'));
-            }
-            else {
-                setError(t('loginFailed'));
-            }
+            setError(t('signupFailed'));
         }
         else {
             setError(null);
-            router.push('/dashboard');
+            router.push(`${pathname}/../login`);
         }
 
-        setisSubmitting(false);
+        setIsSubmitting(false);
     }
 
     return (
         <Container size={420} my={40}>
             <Title ta="center" fw={900}>
-                {t('welcomeBack')}
+                {t('welcome')}
             </Title>
             <Text c="dimmed" size="sm" ta="center" mt={5}>
-                {t('doNotHaveAccountYet')}
-                <Anchor component={Link} href="/register" size="sm" fw={700}>
-                    {t('createAccount')}
+                {t('alreadyHaveAccount')}
+                <Anchor component={Link} href={`${pathname}/../login`} size="sm" fw={700}>
+                    {t('login')}
                 </Anchor>
             </Text>
 
@@ -100,7 +84,7 @@ export default function LoginPage() {
                 <form onSubmit={form.onSubmit(async (values) => await onSubmit(values.email, values.password))}>
                     <Stack>
                         <TextInput
-                            label="Email"
+                            label={t('email')}
                             placeholder="you@doihavemoney.com"
                             required
                             {...form.getInputProps('email')}
@@ -108,28 +92,29 @@ export default function LoginPage() {
 
                         <Box>
                             <PasswordInput
-                                label="Password"
-                                placeholder="Your password"
+                                label={t('password')}
+                                placeholder={t('yourPassword')}
                                 required
                                 {...form.getInputProps('password')}
+                                mb='sm'
                             />
-                            <Group justify="flex-end" mt={5}>
-                                <Anchor component={Link} href="/forgot-password" size="xs" fw={700}>
-                                    {t('forgotPassword')}
-                                </Anchor>
-                            </Group>
+
+                            <PasswordCriteria
+                                setAreAllCriteriaMet={setAreAllCriteriaMet}
+                                password={form.getInputProps('password').value}
+                            />
                         </Box>
 
                         <Button
                             type="submit"
                             fullWidth
-                            mt="xl"
+                            mt="sm"
                             size="md"
-                            disabled={form.getInputProps('email').value === '' || form.getInputProps('password').value === ''}
+                            disabled={!areAllCriteriaMet || form.getInputProps('email').value === ''}
                             leftSection={<MdLogin size={18} />}
                             loading={isSubmitting}
                         >
-                            {t('signIn')}
+                            {t('signup')}
                         </Button>
                     </Stack>
                 </form>
