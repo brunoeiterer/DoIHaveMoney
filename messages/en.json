@@ -20,5 +20,16 @@
         "logout": "Logout",
         "login": "Login",
         "getStarted": "Get Started"
+    },
+
+    "Login": {
+        "invalidCredentials": "Incorrect email or password.",
+        "loginFailed": "There was a problem logging in. Please try again later.",
+        "errorAlertTitle": "Login Failed",
+        "welcomeBack": "Welcome Back",
+        "doNotHaveAccountYet": "Do not have an account yet? ",
+        "createAccount": "Create Account",
+        "forgotPassword": "Forgot Password?",
+        "signIn": "SignIn"
     }
 }

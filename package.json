@@ -13,6 +13,8 @@
     "@mantine/dates": "^8.3.14",
     "@mantine/form": "^8.3.14",
     "@mantine/hooks": "8.3.14",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.93.3",
     "dayjs": "^1.11.19",
     "next": "15.5.3",
     "next-intl": "^4.8.1",
