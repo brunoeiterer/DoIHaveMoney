@@ -5,15 +5,20 @@ import {
   ColorSchemeScript,
   mantineHtmlProps,
 } from "@mantine/core";
-import { theme } from "../../theme";
+import { theme } from "../../../theme";
 import { NextIntlClientProvider } from "next-intl";
+import { Header } from "@/components/Header/Header";
 
 export const metadata = {
   title: "Mantine Next.js template",
   description: "I am using Mantine with Next.js!",
 };
 
-export default function RootLayout({ children }: { children: any }) {
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
@@ -27,6 +32,7 @@ export default function RootLayout({ children }: { children: any }) {
       <body>
         <MantineProvider theme={theme}>
           <NextIntlClientProvider>
+            <Header variant="loggedOut" />
             {children}
           </NextIntlClientProvider>
           </MantineProvider>

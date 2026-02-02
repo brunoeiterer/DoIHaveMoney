@@ -11,5 +11,14 @@
         "labelDate": "Date",
         "labelCategory": "Category",
         "saveButton": "Submit"
+    },
+
+    "Header": {
+        "appName": "DoIHaveMoney?",
+        "userSettings": "UserSettings",
+        "settings": "Settings",
+        "logout": "Logout",
+        "login": "Login",
+        "getStarted": "Get Started"
     }
 }
