@@ -1,6 +1,6 @@
 'use client';
 
-import { Container, Grid, GridCol, Paper, Title, Text, Group, Button, MultiSelect, Stack, Accordion,Box } from '@mantine/core';
+import { Container, Grid, GridCol, Paper, Title, Text, Group, Button, MultiSelect, Stack, Accordion, Box } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { Link, usePathname } from '../../../i18n/navigation';
 import { MdAdd, MdFilterListAlt } from 'react-icons/md';
@@ -19,7 +19,7 @@ export default function Dashboard() {
         <Button
           component={Link}
           href={`${pathname}/add`}
-          leftSection={<MdAdd size={18} />} 
+          leftSection={<MdAdd size={18} />}
           radius="md"
         >
           Add Expense
@@ -29,7 +29,7 @@ export default function Dashboard() {
       <Grid gutter="md">
         {/* 2. Filters Sidebar (or Top Bar) */}
         <GridCol span={{ base: 12, md: 4 }}>
-          <Paper withBorder p="md" radius="md">
+          <Paper withBorder p="md" radius="md" h='100%'>
             <Group mb="md">
               <MdFilterListAlt size={18} />
               <Text fw={700}>Filters</Text>
@@ -47,7 +47,7 @@ export default function Dashboard() {
         </GridCol>
 
         {/* 3. Main Content: Chart & List */}
-        <GridCol span={{ base: 12, md: 8 }}>
+        <GridCol span={{ base: 12, md: 8 }} h='100%'>
           <Stack gap="md">
             {/* Chart Placeholder */}
             <Paper withBorder p="xl" radius="md" h={300}>
@@ -57,39 +57,41 @@ export default function Dashboard() {
                 [Pie Chart Placeholder]
               </Box>
             </Paper>
-
-            <Title order={4} mt="lg">Transactions</Title>
-            <Accordion variant="separated">
-              <ExpenseItem
-                category="Food"
-                date="2026-02-01"
-                amount={150.00}
-                currency="R$"
-                description="Weekly grocery shopping at Carrefour"
-              />
-              <ExpenseItem
-                category="Entertainment"
-                date="2026-01-28"
-                amount={80.00}
-                currency="R$"
-                description="Movie tickets and popcorn"
-              />
-              <ExpenseItem
-                category="Entertainment"
-                date="2026-01-28"
-                amount={80.00}
-                currency="R$"
-                description="Movie tickets and popcorn"
-              />
-              <ExpenseItem
-                category="Entertainment"
-                date="2026-01-28"
-                amount={80.00}
-                currency="R$"
-                description="Movie tickets and popcorn"
-              />
-            </Accordion>
           </Stack>
+        </GridCol>
+
+        <GridCol span={{ base: 12, md: 12 }} h='100%'>
+          <Title order={4} mt="lg">Transactions</Title>
+          <Accordion variant="separated">
+            <ExpenseItem
+              category="Food"
+              date="2026-02-01"
+              amount={150.00}
+              currency="R$"
+              description="Weekly grocery shopping at Carrefour"
+            />
+            <ExpenseItem
+              category="Entertainment"
+              date="2026-01-28"
+              amount={80.00}
+              currency="R$"
+              description="Movie tickets and popcorn"
+            />
+            <ExpenseItem
+              category="Entertainment"
+              date="2026-01-28"
+              amount={80.00}
+              currency="R$"
+              description="Movie tickets and popcorn"
+            />
+            <ExpenseItem
+              category="Entertainment"
+              date="2026-01-28"
+              amount={80.00}
+              currency="R$"
+              description="Movie tickets and popcorn"
+            />
+          </Accordion>
         </GridCol>
       </Grid>
     </Container>
