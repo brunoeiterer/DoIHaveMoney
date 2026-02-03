@@ -4,6 +4,7 @@ import { Group, Button, Text, Menu, Avatar, ActionIcon, useMantineColorScheme } 
 import { MdLogout, MdSettings, MdTranslate, MdDarkMode, MdLightMode } from 'react-icons/md';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
+import { createClient } from '@/lib/supabase/browser-client';
 
 interface HeaderProps {
   variant: 'loggedIn' | 'loggedOut';
@@ -13,6 +14,12 @@ interface HeaderProps {
 export function Header({ variant, currentGroup }: HeaderProps) {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const t = useTranslations('Header');
+
+  const onLogout = async () => {
+    const client = createClient();
+    console.log(await client.auth.getClaims());
+    await client.auth.signOut();
+  };
 
   return (
     <Group justify="space-between" h="100%" m="lg" px="md">
@@ -45,7 +52,7 @@ export function Header({ variant, currentGroup }: HeaderProps) {
                 <Menu.Label>{t('userSettings')}</Menu.Label>
                 <Menu.Item leftSection={<MdSettings />}>{t('settings')}</Menu.Item>
                 <Menu.Divider />
-                <Menu.Item color="red" leftSection={<MdLogout />} component={Link} href="/logout">
+                <Menu.Item color="red" leftSection={<MdLogout />} onClick={onLogout}>
                   {t('logout')}
                 </Menu.Item>
               </Menu.Dropdown>
