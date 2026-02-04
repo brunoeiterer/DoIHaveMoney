@@ -17,7 +17,6 @@ export function Header({ variant, currentGroup }: HeaderProps) {
 
   const onLogout = async () => {
     const client = createClient();
-    console.log(await client.auth.getClaims());
     await client.auth.signOut();
   };
 
