@@ -2,9 +2,9 @@
 
 import { Container, Grid, GridCol, Paper, Title, Text, Group, Button, MultiSelect, Stack, Accordion, Box } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import { Link, usePathname } from '../../../i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { MdAdd, MdFilterListAlt } from 'react-icons/md';
-import ExpenseItem from '@/components/expenseItem/expenseItem';
+import ExpenseItem from '@/components/ExpenseItem/ExpenseItem';
 
 export default function Dashboard() {
   const pathname = usePathname();
