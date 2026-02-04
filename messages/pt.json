@@ -1,0 +1,59 @@
+{
+    "LandingPage": {
+        "slogan": "Controle de Gastos para <highlight>Famílias Modernas</highlight>",
+        "getStarted": "Começar"
+    },
+
+    "AddExpense": {
+        "pageTitle": "Adicionar Despesas",
+        "labelDescription": "Descrição",
+        "labelAmount": "Valor",
+        "labelDate": "Data",
+        "labelCategory": "Categoria",
+        "saveButton": "Enviar"
+    },
+
+    "Header": {
+        "appName": "DoIHaveMoney?",
+        "userSettings": "Configurações do Usuário",
+        "settings": "Configurações",
+        "logout": "Sair",
+        "login": "Entrar",
+        "getStarted": "Começar"
+    },
+
+    "Login": {
+        "invalidCredentials": "Email ou senha inválidos.",
+        "loginFailed": "Um problema aconteceu ao entrar. Por favor, tente novamente mais tarde.",
+        "errorAlertTitle": "Problema ao Entrar",
+        "welcomeBack": "Bem-Vindo(a) de Volta!",
+        "doNotHaveAccountYet": "Ainda não tem uma conta? ",
+        "createAccount": "Criar conta!",
+        "forgotPassword": "Esqueceu sua senha?",
+        "signIn": "Entrar"
+    },
+
+    "PasswordCriteria": {
+        "passwordLengthCriteria": "Pelo menos 8 caracteres.",
+        "passwordLowerCaseCriteria": "Pelo menos 1 letra minúscula.",
+        "passwordUpperCaseCriteria": "Pelo menos 1 letra maiúscula.",
+        "passwordNumberCriteria": "Pelo menos 1 número.",
+        "passwordSymbolCriteria": "Pelo menos 1 símbolo."
+    },
+
+    "Signup": {
+        "welcome": "Bem-Vindo(a)!",
+        "alreadyHaveAccount": "Já tem uma conta? ",
+        "login": "Entrar!",
+        "errorAlertTitle": "Cadastro Falhou",
+        "email": "Email",
+        "password": "senha",
+        "yourPassword": "Sua Senha",
+        "signup": "cadastrar",
+        "signupFailed": "Um problema aconteceu ao cadastra. Por favor, tente novamente mais tarde."
+    },
+
+    "LanguagePicker": {
+        "selectLanguage": "Selecionar Idioma"
+    }
+}

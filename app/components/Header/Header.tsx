@@ -1,10 +1,11 @@
 'use client';
 
 import { Group, Button, Text, Menu, Avatar, ActionIcon, useMantineColorScheme } from '@mantine/core';
-import { MdLogout, MdSettings, MdTranslate, MdDarkMode, MdLightMode } from 'react-icons/md';
+import { MdLogout, MdSettings, MdDarkMode, MdLightMode } from 'react-icons/md';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { createClient } from '@/lib/supabase/browser-client';
+import LanguagePicker from '../LanguagePicker/LanguagePicker';
 
 interface HeaderProps {
   variant: 'loggedIn' | 'loggedOut';
@@ -59,7 +60,7 @@ export function Header({ variant, currentGroup }: HeaderProps) {
           </>
         ) : (
           <>
-            <ActionIcon variant="subtle" color="gray"><MdTranslate /></ActionIcon>
+            <LanguagePicker />
             <Button variant="subtle" component={Link} href="/login">{t('login')}</Button>
             <Button component={Link} href="/register">{t('getStarted')}</Button>
           </>
