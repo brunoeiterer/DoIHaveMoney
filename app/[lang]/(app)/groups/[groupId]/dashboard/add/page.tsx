@@ -12,7 +12,6 @@ export default function AddExpensePage() {
 
   const pathname = usePathname();
 
-  // Centralized form control
   const form = useForm({
     initialValues: {
       description: '',
@@ -30,7 +29,6 @@ export default function AddExpensePage() {
 
   return (
     <Container size="sm" py="xl">
-      {/* Header with Back Button */}
       <Group mb="lg">
         <ActionIcon 
           component={Link} 
@@ -49,7 +47,7 @@ export default function AddExpensePage() {
           <Stack gap="md">
             <TextInput
               label={t('labelDescription')}
-              placeholder="e.g., Monthly Netflix"
+              placeholder={t('descriptionExample')}
               required
               {...form.getInputProps('description')}
             />

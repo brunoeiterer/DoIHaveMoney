@@ -28,7 +28,8 @@
         "@/*": ["./*"],
         "@/i18n/*": ["./i18n/*"],
         "@/components/*": ["./components/*"],
-        "@/lib/*": ["./lib/*"]
+        "@/lib/*": ["./lib/*"],
+        "@/context/*": ["./context/*"]
     }
   },
   "include": [
