@@ -25,7 +25,7 @@ export async function updateSession(request: NextRequest, response: NextResponse
 
   const user = data?.claims;
 
-  if (!user && pathnameParts[2] === 'dashboard') {
+  if (!user && (pathnameParts[2] === 'dashboard' || pathnameParts[2] === 'groups')) {
     const locale = pathnameParts[1];
     url.pathname = `/${locale}/login`;
     return NextResponse.redirect(url);

@@ -49,11 +49,15 @@
         "email": "Email",
         "password": "senha",
         "yourPassword": "Sua Senha",
-        "signup": "cadastrar",
+        "signup": "Cadastrar",
         "signupFailed": "Um problema aconteceu ao cadastra. Por favor, tente novamente mais tarde."
     },
 
     "LanguagePicker": {
         "selectLanguage": "Selecionar Idioma"
+    },
+
+    "Expenses": {
+        "expenses": "Gastos"
     }
 }

@@ -38,7 +38,7 @@ export default function LoginPage() {
     const onSubmit = async (email: string, password: string) => {
         setisSubmitting(true);
         const client = createClient();
-        const { data, error } = await client.auth.signInWithPassword({
+        let { data, error } = await client.auth.signInWithPassword({
             email: email,
             password: password
         });
@@ -53,7 +53,7 @@ export default function LoginPage() {
         }
         else {
             setError(null);
-            router.push('/dashboard');
+            router.push(`/groups`);
         }
 
         setisSubmitting(false);

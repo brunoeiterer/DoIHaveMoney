@@ -55,5 +55,9 @@
 
     "LanguagePicker": {
         "selectLanguage": "Select Language"
+    },
+
+    "Expenses": {
+        "expenses": "Expenses"
     }
 }

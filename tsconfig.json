@@ -27,7 +27,8 @@
     "paths": {
         "@/*": ["./*"],
         "@/i18n/*": ["./i18n/*"],
-        "@/components/*": ["./components/*"]
+        "@/components/*": ["./components/*"],
+        "@/lib/*": ["./lib/*"]
     }
   },
   "include": [

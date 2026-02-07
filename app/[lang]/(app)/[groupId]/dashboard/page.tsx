@@ -1,13 +1,36 @@
 'use client';
 
-import { Container, Grid, GridCol, Paper, Title, Text, Group, Button, MultiSelect, Stack, Accordion, Box } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { Container, Grid, GridCol, Paper, Title, Text, Group, Button, MultiSelect, Stack, Box } from '@mantine/core';
+import { DateInput, DateValue } from '@mantine/dates';
 import { Link, usePathname } from '@/i18n/navigation';
 import { MdAdd, MdFilterListAlt } from 'react-icons/md';
-import ExpenseItem from '@/components/ExpenseItem/ExpenseItem';
+import Expenses from '@/components/Expenses/Expenses';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/browser-client';
 
 export default function Dashboard() {
   const pathname = usePathname();
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [ startDate, setStartDate ] = useState<DateValue>(null);
+  const [ endDate, setEndDate ] = useState<DateValue>(null);
+  const [ currency, setCurrency ] = useState<string>();
+
+  useEffect(() => {
+      async function fetchGroups() {
+          setIsLoading(true);
+
+          const supabase = createClient();
+          const { data, error } = await supabase.from('groups').select();
+
+          if (!error) {
+              // setGroups(data);
+          }
+
+          setIsLoading(false);
+      }
+
+      fetchGroups();
+  }, []);
 
   return (
     <Container size="lg" py="xl">
@@ -35,8 +58,8 @@ export default function Dashboard() {
               <Text fw={700}>Filters</Text>
             </Group>
             <Stack gap="sm">
-              <DateInput label="Start Date" placeholder="Pick date" />
-              <DateInput label="End Date" placeholder="Pick date" />
+              <DateInput label="Start Date" placeholder="Pick date" value={startDate} />
+              <DateInput label="End Date" placeholder="Pick date" value={endDate} />
               <MultiSelect
                 label="Categories"
                 placeholder="All Categories"
@@ -61,37 +84,7 @@ export default function Dashboard() {
         </GridCol>
 
         <GridCol span={{ base: 12, md: 12 }} h='100%'>
-          <Title order={4} mt="lg">Transactions</Title>
-          <Accordion variant="separated">
-            <ExpenseItem
-              category="Food"
-              date="2026-02-01"
-              amount={150.00}
-              currency="R$"
-              description="Weekly grocery shopping at Carrefour"
-            />
-            <ExpenseItem
-              category="Entertainment"
-              date="2026-01-28"
-              amount={80.00}
-              currency="R$"
-              description="Movie tickets and popcorn"
-            />
-            <ExpenseItem
-              category="Entertainment"
-              date="2026-01-28"
-              amount={80.00}
-              currency="R$"
-              description="Movie tickets and popcorn"
-            />
-            <ExpenseItem
-              category="Entertainment"
-              date="2026-01-28"
-              amount={80.00}
-              currency="R$"
-              description="Movie tickets and popcorn"
-            />
-          </Accordion>
+          <Expenses startDate={startDate} endDate={endDate} currency="" />
         </GridCol>
       </Grid>
     </Container>
