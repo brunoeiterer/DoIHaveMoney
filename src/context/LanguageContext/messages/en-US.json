@@ -1,0 +1,12 @@
+{
+    "Login": {
+        "BudgetTracker": "Budget Tracker",
+        "GoogleSheetsStorage": "Google Sheets storage.",
+        "Headline": "Simple budgeting powered by Google Sheets.",
+        "NoSubscriptions": "No subscriptions.",
+        "PrivateByDefault": "Private by default.",
+        "SignInFailedTitle": "Sing In failed.",
+        "SingInFailedMessage": "Sing In failed, please try again later.",
+        "Slogan": "Know exactly where your money is going."
+    }
+}

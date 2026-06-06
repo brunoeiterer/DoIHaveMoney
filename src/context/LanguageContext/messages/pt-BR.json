@@ -1,0 +1,16 @@
+{
+    "Login": {
+        "BudgetTracker": "Orçamento Pessoal",
+        "GoogleSheetsStorage": "Armazenamento no Google Sheets.",
+        "Headline": "Orçamento simples movido pelo Google Sheets.",
+        "NoSubscriptions": "Sem mensalidade.",
+        "PrivateByDefault": "Privado por padrão.",
+        "SignInFailedTitle": "Falha ao entrar.",
+        "SingInFailedMessage": "Falha ao entrar,  por favor, tente novamente mais tarde.",
+        "Slogan": "Saiba exatamente para onde está indo seu dinheiro."
+    },
+
+    "SignInButton": {
+        "SignInWithGoogle": "Fazer login com o Google"
+    }
+}
