@@ -10,6 +10,8 @@ import { LanguageProvider } from './context/LanguageContext/LanguageContext.tsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { AuthProvider } from './context/AuthContext/AuthContext.tsx'
 import { Notifications } from '@mantine/notifications'
+import { TopBar } from './components/TopBar/TopBar.tsx'
+import { Authorization } from './components/Authorization/Authorization.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -17,10 +19,12 @@ createRoot(document.getElementById('root')!).render(
       <Notifications />
         <LanguageProvider>
           <AuthProvider>
+            <TopBar />
             <GoogleOAuthProvider clientId={'1044533121358-2rs5bvb5cinl5s4lj4srncvon1tavvk3.apps.googleusercontent.com'}>
               <BrowserRouter>
                 <Routes>
                   <Route index element={<Landing />} />
+                  <Route path='authorization' element={<Authorization />} />
                 </Routes>
               </BrowserRouter>
             </GoogleOAuthProvider>

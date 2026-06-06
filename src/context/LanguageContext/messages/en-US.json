@@ -1,4 +1,13 @@
 {
+    "Authorization": {
+        "ButtonText": "Connect Google Drive & Sheets",
+        "ConnectGoogleDriveAndSheets": "Connect Google Drive & Google Sheets",
+        "ConnectionRequirementExplanation": "To create and manage your budget data, Do I Have Money needs permission to access Google Drive and Google Sheets.",
+        "RevokeAccessNotice": "Access can be revoked anytime from your Google Account settings.",
+        "StorageLine": "Store your budget in your own Google account.",
+        "Setup": "Setup"
+    },
+
     "Login": {
         "BudgetTracker": "Budget Tracker",
         "GoogleSheetsStorage": "Google Sheets storage.",
@@ -8,5 +17,10 @@
         "SignInFailedTitle": "Sing In failed.",
         "SingInFailedMessage": "Sing In failed, please try again later.",
         "Slogan": "Know exactly where your money is going."
+    },
+
+    "TopBar": {
+        "Account": "Account",
+        "Sign Out": "Sign Out"
     }
 }

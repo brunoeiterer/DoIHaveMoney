@@ -5,21 +5,21 @@ import {
     Paper,
     Stack,
     Text,
-    ThemeIcon,
     Title,
-    Group,
 } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../context/AuthContext/AuthContext";
-import type { GoogleJwt } from "../../lib/types/GoogleJwt";
 import { notifications } from "@mantine/notifications";
+import type { GoogleJwt } from "../../lib/types/googleJwt";
+import { useNavigate } from "react-router";
+import { FeatureItem } from "../FeatureItem/FeatureItem";
 
 export function Landing() {
     const { translations } = useLanguage('Login');
     const { signIn } = useAuth();
+    const navigate = useNavigate();
 
     return (
         <Container size="sm">
@@ -51,6 +51,7 @@ export function Landing() {
                             onSuccess={(credentialResponse) => {
                                 const profile = jwtDecode<GoogleJwt>(credentialResponse.credential!);
                                 signIn(profile.name, profile.email, profile.picture);
+                                navigate('/authorization');
                             }}
                             onError={() => {
                                 notifications.show({
@@ -62,26 +63,17 @@ export function Landing() {
                         />
 
                         <Stack gap="sm">
-                            <Group gap="xs">
-                                <ThemeIcon size="sm" variant="light">
-                                    <IconCheck size={14} />
-                                </ThemeIcon>
-                                <Text size="sm">{translations['GoogleSheetsStorage']}</Text>
-                            </Group>
+                            <FeatureItem>
+                                {translations['GoogleSheetsStorage']}
+                            </FeatureItem>
 
-                            <Group gap="xs">
-                                <ThemeIcon size="sm" variant="light">
-                                    <IconCheck size={14} />
-                                </ThemeIcon>
-                                <Text size="sm">{translations['PrivateByDefault']}</Text>
-                            </Group>
+                            <FeatureItem>
+                                {translations['PrivateByDefault']}
+                            </FeatureItem>
 
-                            <Group gap="xs">
-                                <ThemeIcon size="sm" variant="light">
-                                    <IconCheck size={14} />
-                                </ThemeIcon>
-                                <Text size="sm">{translations['NoSubscriptions']}</Text>
-                            </Group>
+                            <FeatureItem>
+                                {translations['NoSubscriptions']}
+                            </FeatureItem>
                         </Stack>
                     </Stack>
                 </Paper>

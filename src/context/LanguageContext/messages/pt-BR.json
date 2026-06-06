@@ -1,4 +1,13 @@
 {
+    "Authorization": {
+        "ButtonText": "Conecte o Google Drive e Google Sheets",
+        "ConnectGoogleDriveAndSheets": "Conecte o Google Drive e Google Sheets",
+        "ConnectionRequirementExplanation": "Para criar e gerenciar seus orçamentos o Do I Have Money precisa de autorização para acessar o seu Google Drive e Google Sheets.",
+        "RevokeAccessNotice": "O acesso pode ser removido a qualquer momento através das configurações da sua conta Google.",
+        "StorageLine": "Armazene seus orçamentos na sua própria conta do Google.",
+        "Setup": "Configuração"
+    },
+
     "Login": {
         "BudgetTracker": "Orçamento Pessoal",
         "GoogleSheetsStorage": "Armazenamento no Google Sheets.",
@@ -10,7 +19,8 @@
         "Slogan": "Saiba exatamente para onde está indo seu dinheiro."
     },
 
-    "SignInButton": {
-        "SignInWithGoogle": "Fazer login com o Google"
+    "TopBar": {
+        "Account": "Conta",
+        "SignOut": "Sair"
     }
 }
