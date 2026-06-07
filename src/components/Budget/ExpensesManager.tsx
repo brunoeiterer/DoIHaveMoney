@@ -9,7 +9,6 @@ import {
   Select,
   ActionIcon,
   Text,
-  Collapse,
   Box,
 } from "@mantine/core";
 import { DateInput, type DateValue } from "@mantine/dates";

@@ -23,6 +23,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { ExpensesManager } from "./ExpensesManager";
 import { CategoriesManager } from "./CategoriesManager";
 import type { BudgetFile } from "../../lib/types/budgetFile";
+import { MonthlyTotals } from "./MonthlyTotals";
 
 interface BudgetState {
   budgetFile: BudgetFile;
@@ -130,6 +131,8 @@ export function Budget() {
           </ActionIcon>
         </Group>
       </Paper>
+
+      <MonthlyTotals expenses={expenses} currentMonth={currentMonth} />
     </Container>
   );
 }

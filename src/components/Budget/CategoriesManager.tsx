@@ -7,7 +7,6 @@ import {
   TextInput,
   ActionIcon,
   Text,
-  Collapse,
   Box,
 } from "@mantine/core";
 import {

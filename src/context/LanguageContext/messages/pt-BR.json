@@ -70,6 +70,13 @@
     "Slogan": "Saiba exatamente para onde está indo seu dinheiro."
   },
 
+  "MonthlyTotals": {
+    "Day": "Dia",
+    "MonthlyTotals": "Totais do Mês",
+    "NoExpensesForMonth": "Nenhum gasto este mês.",
+    "TotalSpent": "Total Gasto"
+  },
+
   "TopBar": {
     "Account": "Conta",
     "SignOut": "Sair"

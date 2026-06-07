@@ -70,6 +70,13 @@
     "Slogan": "Know exactly where your money is going."
   },
 
+  "MonthlyTotals": {
+    "Day": "Day",
+    "MonthlyTotals": "Monthly Totals",
+    "NoExpensesForMonth": "No expenses this month.",
+    "TotalSpent": "Total Spent"
+  },
+
   "TopBar": {
     "Account": "Account",
     "Sign Out": "Sign Out"
