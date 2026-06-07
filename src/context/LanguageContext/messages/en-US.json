@@ -11,7 +11,8 @@
   },
 
   "BudgetItem": {
-    "ConfirmDeletionInput": "To confirm deletion, type <strong>{name}</strong> below:"
+    "ConfirmDeletionInput": "To confirm deletion, type <strong>{name}</strong> below:",
+    "DeleteForever": "Delete Forever"
   },
 
   "Budgets": {

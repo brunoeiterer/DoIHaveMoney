@@ -25,7 +25,7 @@ export function BudgetItem({ id, name }: BudgetItemProps) {
   const [deleteInput, setDeleteInput] = useState<string>("");
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
-  const { tRich } = useLanguage("BudgetItem");
+  const { t, tRich } = useLanguage("BudgetItem");
 
   const deleteBudget = useDeleteBudget();
 
@@ -93,7 +93,7 @@ export function BudgetItem({ id, name }: BudgetItemProps) {
                   setIsDeleting(false);
                 }}
               >
-                Delete Forever
+                {t("DeleteForever")}
               </Button>
             </Group>
           </Paper>
