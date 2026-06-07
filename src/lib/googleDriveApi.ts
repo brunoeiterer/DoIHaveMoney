@@ -37,21 +37,6 @@ export async function createBudgetSpreadsheet(
             },
           },
           {
-            updateCells: {
-              start: { sheetId: 0, rowIndex: 0, columnIndex: 0 },
-              rows: [
-                {
-                  values: [
-                    { userEnteredValue: { stringValue: "Date" } },
-                    { userEnteredValue: { stringValue: "Description" } },
-                    { userEnteredValue: { stringValue: "Amount" } },
-                  ],
-                },
-              ],
-              fields: "userEnteredValue",
-            },
-          },
-          {
             addSheet: {
               properties: { title: "Categories" },
             },
@@ -86,19 +71,37 @@ export async function deleteBudgetSpreadsheet(
 }
 
 export async function fetchBudgetData(spreadsheetId: string, token: string) {
-  const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Data!A2:C`,
-    { headers: { Authorization: `Bearer ${token}` } },
+  const url = new URL(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchGet`,
   );
+  url.searchParams.append("ranges", "Data");
+  url.searchParams.append("ranges", "Categories");
+
+  const res = await fetch(url.toString(), {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
   if (!res.ok) throw new Error("Failed to fetch budget data");
+
   const data = await res.json();
 
-  return (data.values || []).map((row: any[], index: number) => ({
+  const dataSheetValues = data.valueRanges[0].values || [];
+  const categoriesSheetValues = data.valueRanges[1].values || [];
+
+  const expenses = dataSheetValues.map((row: any[], index: number) => ({
     id: index,
-    date: row[0],
-    description: row[1],
-    amount: parseFloat(row[2] || "0"),
+    date: row[0] || "",
+    description: row[1] || "",
+    category: row[2] || "",
+    amount: parseFloat(row[3] || "0"),
   }));
+
+  const categories = categoriesSheetValues.map((row: any[], index: number) => ({
+    id: index,
+    name: row[0] || "",
+  }));
+
+  return { expenses, categories };
 }
 
 export async function addExpenseToSheet(
@@ -115,10 +118,80 @@ export async function addExpenseToSheet(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        values: [[expense.date, expense.description, expense.amount]],
+        values: [
+          [expense.date, expense.description, expense.category, expense.amount],
+        ],
       }),
     },
   );
   if (!res.ok) throw new Error("Failed to add expense");
   return res.json();
+}
+
+export async function addCategoryToSheet(
+  spreadsheetId: string,
+  name: string,
+  token: string,
+) {
+  return fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Categories!A:A:append?valueInputOption=USER_ENTERED`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ values: [[name]] }),
+    },
+  );
+}
+
+export async function deleteSheetRow(
+  spreadsheetId: string,
+  sheetId: number,
+  rowIndex: number,
+  token: string,
+) {
+  return fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        requests: [
+          {
+            deleteDimension: {
+              range: {
+                sheetId: sheetId,
+                dimension: "ROWS",
+                startIndex: rowIndex,
+                endIndex: rowIndex + 1,
+              },
+            },
+          },
+        ],
+      }),
+    },
+  );
+}
+
+export async function getSpreadsheetMetadata(
+  spreadsheetId: string,
+  token: string,
+) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties(sheetId,title)`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+
+  const sheetMap: Record<string, number> = {};
+  data.sheets.forEach((s: any) => {
+    sheetMap[s.properties.title] = s.properties.sheetId;
+  });
+
+  return sheetMap;
 }

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext/AuthContext";
 import type { BudgetFile } from "../lib/types/budgetFile";
+import { getSpreadsheetMetadata } from "../lib/googleDriveApi";
 
 interface FetchBudgetsResponse {
   folderId: string;
@@ -68,9 +69,19 @@ export function useBudgets() {
         throw new Error("Failed to fetch budgets from Google Drive");
       const filesData = await filesRes.json();
 
+      const budgetsWithMetadata = await Promise.all(
+        filesData.files.map(async (file: { id: string; name: string }) => {
+          const sheetMap = await getSpreadsheetMetadata(file.id, accessToken);
+          return {
+            ...file,
+            sheetIds: sheetMap,
+          };
+        }),
+      );
+
       return {
         folderId: currentFolderId,
-        budgets: filesData.files || [],
+        budgets: budgetsWithMetadata,
       };
     },
 

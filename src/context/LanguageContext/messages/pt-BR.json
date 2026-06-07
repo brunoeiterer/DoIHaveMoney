@@ -10,6 +10,11 @@
     "Setup": "Configuração"
   },
 
+  "Budget": {
+    "BackToBudgets": "Voltar para Orçamentos",
+    "Budget": "Orçamento"
+  },
+
   "BudgetItem": {
     "ConfirmDeletionInput": "Para confirmar, digite <strong>{name}</strong> abaixo:",
     "DeleteForever": "Deletar Para Sempre"
@@ -25,11 +30,29 @@
     "YourBudgets": "Seus Orçamentos"
   },
 
+  "CategoriesManager": {
+    "Categories": "Categorias",
+    "NewCategoryPlaceholder": "Nova Categoria",
+    "CategoryName": "Nome",
+    "NoCategoriesYet": "Nenhuma categoria configurada ainda."
+  },
+
   "CreateNewBudget": {
     "CreateFailed": "Um erro occoreu ao criar o orçamento, por favor, tente novamente mais tarde.",
     "NameAlreadyExists": "Já existe um orçamento com este nome.",
     "NameEmptyError": "O nome não pode ser vazio.",
     "NamePlaceholder": "Digite o nome do orçamento..."
+  },
+
+  "ExpensesManager": {
+    "Amount": "Valor",
+    "Category": "Categoria",
+    "Date": "Data",
+    "Description": "Descrição",
+    "ExpensePlaceholder": "Gasto",
+    "Expenses": "Gastos",
+    "NoExpensesThisMonth": "Nenhum gasto este mês.",
+    "SelectCategory": "Selecionar Categoria..."
   },
 
   "LoadingState": {

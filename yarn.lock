@@ -345,6 +345,13 @@
     react-remove-scroll "^2.7.2"
     type-fest "^5.6.0"
 
+"@mantine/dates@^9.3.0":
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/@mantine/dates/-/dates-9.3.0.tgz#6b639243f553ac5d9bce89d0bc4c488425d2a023"
+  integrity sha512-THGHMi32EqhyU46i6d5wRAWrWKJ21MnOO/eZ9u/SwkgZBDbkzduouLYSrBprAPhD68dflz15nGCfVZ0rYSgT0w==
+  dependencies:
+    clsx "^2.1.1"
+
 "@mantine/hooks@^9.3.0":
   version "9.3.0"
   resolved "https://registry.npmjs.org/@mantine/hooks/-/hooks-9.3.0.tgz"

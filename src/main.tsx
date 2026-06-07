@@ -6,6 +6,7 @@ import { theme } from "./theme.ts";
 import { Landing } from "./components/Landing.tsx";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/dates/styles.css";
 import { LanguageProvider } from "./context/LanguageContext/LanguageContext.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./context/AuthContext/AuthContext.tsx";
@@ -15,6 +16,7 @@ import { Authorization } from "./components/Authorization.tsx";
 import { Budgets } from "./components/Budgets/Budgets.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { Budget } from "./components/Budget/Budget.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +48,9 @@ createRoot(document.getElementById("root")!).render(
                   </Route>
                   <Route element={<ProtectedRoute requireDrive />}>
                     <Route path="budgets" element={<Budgets />} />
+                  </Route>
+                  <Route element={<ProtectedRoute requireDrive />}>
+                    <Route path="budgets/:id" element={<Budget />} />
                   </Route>
                 </Routes>
               </BrowserRouter>

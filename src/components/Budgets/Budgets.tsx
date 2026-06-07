@@ -70,11 +70,7 @@ export function Budgets() {
                   </Text>
                 ) : (
                   budgets.map((budget) => (
-                    <BudgetItem
-                      key={budget.id}
-                      id={budget.id}
-                      name={budget.name}
-                    />
+                    <BudgetItem key={budget.id} budgetFile={budget} />
                   ))
                 )}
 

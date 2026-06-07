@@ -14,13 +14,13 @@ import { useNavigate } from "react-router";
 import { useDeleteBudget } from "../../hooks/useDeleteBudget";
 import { LoadingState } from "../LoadingState";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
+import type { BudgetFile } from "../../lib/types/budgetFile";
 
 interface BudgetItemProps {
-  id: string;
-  name: string;
+  budgetFile: BudgetFile;
 }
 
-export function BudgetItem({ id, name }: BudgetItemProps) {
+export function BudgetItem({ budgetFile }: BudgetItemProps) {
   const [isSelectedForDelete, setIsSelectedForDelete] = useState(false);
   const [deleteInput, setDeleteInput] = useState<string>("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -33,16 +33,22 @@ export function BudgetItem({ id, name }: BudgetItemProps) {
     <Stack>
       <Group>
         <Button
-          key={id}
+          key={budgetFile.id}
           variant="default"
           size="xl"
-          onClick={() => navigate(`/budget/${id}`)}
+          onClick={() =>
+            navigate(`/budgets/${budgetFile.id}`, {
+              state: {
+                budgetFile: budgetFile,
+              },
+            })
+          }
           style={{ flex: 1 }}
         >
-          {name}
+          {budgetFile.name}
         </Button>
         <Button
-          key={`${id}-delete`}
+          key={`${budgetFile.id}-delete`}
           variant="filled"
           size="xl"
           onClick={() => setIsSelectedForDelete(true)}
@@ -62,7 +68,7 @@ export function BudgetItem({ id, name }: BudgetItemProps) {
           >
             <Group justify="space-between" align="center">
               <Text size="sm" mb="sm" fw={500}>
-                {tRich("ConfirmDeletionInput", { name })}
+                {tRich("ConfirmDeletionInput", { name: budgetFile.name })}
               </Text>
               <CloseButton
                 mb="sm"
@@ -73,23 +79,23 @@ export function BudgetItem({ id, name }: BudgetItemProps) {
             <Group align="flex-start">
               <TextInput
                 style={{ flex: 1, borderColor: "var(--mantine-color-red-6)" }}
-                placeholder={name}
+                placeholder={budgetFile.name}
                 value={deleteInput}
                 onChange={(e) => setDeleteInput(e.currentTarget.value)}
                 onKeyDown={async (e) => {
-                  if (e.key === "Enter" && deleteInput === name) {
+                  if (e.key === "Enter" && deleteInput === budgetFile.name) {
                     setIsDeleting(true);
-                    await deleteBudget.mutateAsync(id);
+                    await deleteBudget.mutateAsync(budgetFile.id);
                     setIsDeleting(false);
                   }
                 }}
               />
               <Button
                 color="red"
-                disabled={deleteInput !== name}
+                disabled={deleteInput !== budgetFile.name}
                 onClick={async () => {
                   setIsDeleting(true);
-                  await deleteBudget.mutateAsync(id);
+                  await deleteBudget.mutateAsync(budgetFile.id);
                   setIsDeleting(false);
                 }}
               >
