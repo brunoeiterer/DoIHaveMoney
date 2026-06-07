@@ -15,11 +15,20 @@ import { notifications } from "@mantine/notifications";
 import type { GoogleJwt } from "../lib/types/googleJwt";
 import { useNavigate } from "react-router";
 import { FeatureItem } from "./FeatureItem";
+import { LoadingState } from "./LoadingState";
 
 export function Landing() {
     const { translations } = useLanguage('Login');
-    const { signIn } = useAuth();
+    const { signIn, isAuthenticating, accessToken } = useAuth();
     const navigate = useNavigate();
+
+    if(isAuthenticating) {
+        return <LoadingState fullScreen />
+    }
+
+    if(accessToken) {
+        navigate('/budgets', { replace: true });
+    }
 
     return (
         <Container size="sm">

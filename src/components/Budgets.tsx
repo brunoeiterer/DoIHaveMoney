@@ -16,7 +16,7 @@ import { useBudgets } from "../hooks/useBudgets";
 import { notifications } from "@mantine/notifications";
 import { useEffect } from "react";
 
-export default function Budgets() {
+export function Budgets() {
     const { translations } = useLanguage('Budgets'); 
     const { accessToken } = useAuth();
     const navigate = useNavigate();

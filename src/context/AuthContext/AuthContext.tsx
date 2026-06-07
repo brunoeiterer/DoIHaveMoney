@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
     email: string;
@@ -6,7 +6,7 @@ interface AuthContextType {
     pictureLink: string;
     isSignedIn: boolean;
     signIn: (email: string, name: string, pictureLink: string) => void;
-    isAuthorized: boolean;
+    isAuthenticating: boolean;
     accessToken: string;
     setAccessToken: (accessToken: string) => void;
 }
@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [name, setName] = useState('');
     const [pictureLink, setPictureLink] = useState('');
     const [isSignedIn, setIsSignedIn] = useState(false);
-    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [isAuthenticating, setIsAuthenticating] = useState(true);
     const [accessToken, setAccessToken] = useState('');
 
     const signIn = (email: string, name: string, pictureLink: string) => {
@@ -37,8 +37,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsSignedIn(true);
     }
 
+    useEffect(() => {
+        const checkAuthorization = async () => {
+            try {
+                const response = await fetch('/api/auth-refresh', { method: 'POST' });
+
+                if (response.ok) {
+                    const { accessToken, user: recoveredUser } = await response.json();
+
+                    setAccessToken(accessToken);
+
+                    if (recoveredUser) {
+                        setEmail(recoveredUser.email);
+                        setName(recoveredUser.name);
+                        setPictureLink(recoveredUser.pictureLink);
+                    }
+
+                } else {
+                    setEmail('');
+                    setName('');
+                    setPictureLink('');
+                }
+            } catch {
+            } finally {
+                setIsAuthenticating(false);
+            }
+        }
+
+        checkAuthorization();
+    }, []);
+
     return (
-        <AuthContext.Provider value={{ email, name, pictureLink, isSignedIn, signIn, isAuthorized, accessToken, setAccessToken }}>
+        <AuthContext.Provider value={{ email, name, pictureLink, isSignedIn, signIn, isAuthenticating, accessToken, setAccessToken }}>
             {children}
         </AuthContext.Provider>
     );
