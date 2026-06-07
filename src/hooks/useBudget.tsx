@@ -32,7 +32,7 @@ export function useBudget(
       amount: number;
     }) => {
       if (!accessToken || !spreadsheetId) throw new Error("Missing auth or ID");
-      return addExpenseToSheet(spreadsheetId, expense, accessToken);
+      await addExpenseToSheet(spreadsheetId, expense, accessToken);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] });
@@ -40,23 +40,30 @@ export function useBudget(
   });
 
   const addCategory = useMutation({
-    mutationFn: (newCat: { name: string }) =>
-      addCategoryToSheet(spreadsheetId!, newCat.name, accessToken!),
+    mutationFn: async (name: string) => {
+      await addCategoryToSheet(spreadsheetId!, name, accessToken!);
+    },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] }),
   });
 
-  // 2. Delete Expense (Data sheet)
   const deleteExpense = useMutation({
-    mutationFn: (rowIndex: number) =>
-      deleteSheetRow(spreadsheetId!, dataSheetId, rowIndex, accessToken!),
+    mutationFn: async (rowIndex: number) => {
+      await deleteSheetRow(spreadsheetId!, dataSheetId, rowIndex, accessToken!);
+    },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] }),
   });
 
   const deleteCategory = useMutation({
-    mutationFn: (rowIndex: number) =>
-      deleteSheetRow(spreadsheetId!, categoriesSheetId, rowIndex, accessToken!),
+    mutationFn: async (rowIndex: number) => {
+      await deleteSheetRow(
+        spreadsheetId!,
+        categoriesSheetId,
+        rowIndex,
+        accessToken!,
+      );
+    },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] }),
   });
@@ -64,12 +71,13 @@ export function useBudget(
   return {
     expenses: query.data?.expenses || [],
     categories: query.data?.categories || [],
-    isLoading: query.isLoading,
+    isLoading: query.isFetching,
     error: query.error,
-    addExpense: addExpense.mutate,
-    addCategory: addCategory.mutate,
-    deleteExpense: deleteExpense.mutate,
-    deleteCategory: deleteCategory.mutate,
-    isAddingExpense: addExpense.isPending,
+    addExpense: addExpense.mutateAsync,
+    addCategory: addCategory.mutateAsync,
+    deleteExpense: deleteExpense.mutateAsync,
+    deleteCategory: deleteCategory.mutateAsync,
+    isExpensePending: addExpense.isPending || deleteExpense.isPending,
+    isCategoryPending: addCategory.isPending || deleteCategory.isPending,
   };
 }

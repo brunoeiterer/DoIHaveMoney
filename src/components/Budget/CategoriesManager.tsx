@@ -9,19 +9,14 @@ import {
   Text,
   Box,
 } from "@mantine/core";
-import {
-  IconTrash,
-  IconPlus,
-  IconChevronUp,
-  IconChevronDown,
-} from "@tabler/icons-react";
+import { IconTrash, IconPlus } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import type { Category } from "../../lib/types/category";
 
 interface CategoriesManagerProps {
   categories: Category[];
-  onAddCategory: (category: { name: string }) => void;
-  onDeleteCategory: (id: number) => void;
+  onAddCategory: (name: string) => Promise<void>;
+  onDeleteCategory: (id: number) => Promise<void>;
 }
 
 export function CategoriesManager({
@@ -31,9 +26,9 @@ export function CategoriesManager({
 }: CategoriesManagerProps) {
   const { t } = useLanguage("CategoriesManager");
   const [name, setName] = useState("");
-  const [opened, setOpened] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const trimmedName = name.trim();
@@ -46,39 +41,51 @@ export function CategoriesManager({
       return;
     }
 
-    onAddCategory({ name: trimmedName });
+    setIsSubmitting(true);
+    try {
+      await onAddCategory(trimmedName);
+    } finally {
+      setIsSubmitting(false);
+    }
+
     setName("");
   };
 
+  const handleDelete = async (id: number) => {
+    setIsSubmitting(true);
+    try {
+      console.log("deleting");
+      await onDeleteCategory(id);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <Paper withBorder p="md" radius="md">
+    <Paper withBorder p="md" radius="md" h={"500px"}>
       <Group justify="space-between" mb="md">
         <Title order={4} mb="md">
           {t("Categories")}
         </Title>
-        <ActionIcon
-          variant="subtle"
-          color="gray"
-          onClick={() => setOpened((o) => !o)}
-          aria-label="Toggle expenses table"
-        >
-          {opened ? <IconChevronUp size={20} /> : <IconChevronDown size={20} />}
-        </ActionIcon>
       </Group>
 
       <form onSubmit={handleSubmit}>
         <Group align="flex-end" mb="xl" gap="xs">
           <TextInput
-            placeholder={t("NewCategoryPlaceholder", {
-              fallback: "e.g., Groceries",
-            })}
+            placeholder={t("NewCategoryPlaceholder")}
             label={t("CategoryName")}
             value={name}
             onChange={(e) => setName(e.currentTarget.value)}
             style={{ flex: 1 }}
             required
           />
-          <ActionIcon type="submit" size="lg" color="emerald" variant="filled">
+          <ActionIcon
+            type="submit"
+            size="lg"
+            color="emerald"
+            variant="filled"
+            disabled={isSubmitting}
+          >
             <IconPlus size={18} />
           </ActionIcon>
         </Group>
@@ -87,8 +94,8 @@ export function CategoriesManager({
       <Box pos="relative">
         <div
           style={{
-            maxHeight: opened ? "2000px" : "180px",
-            overflow: "hidden",
+            height: "300px",
+            overflow: "auto",
           }}
         >
           <Table horizontalSpacing="sm" verticalSpacing="xs">
@@ -109,8 +116,9 @@ export function CategoriesManager({
                       <ActionIcon
                         color="red"
                         variant="subtle"
-                        onClick={() => onDeleteCategory(category.id)}
+                        onClick={() => handleDelete(category.id)}
                         aria-label={`Delete ${category.name}`}
+                        disabled={isSubmitting}
                       >
                         <IconTrash size={16} />
                       </ActionIcon>
@@ -122,7 +130,7 @@ export function CategoriesManager({
           </Table>
         </div>
 
-        {!opened && categories.length > 2 && (
+        {categories.length > 2 && (
           <Box
             pos="absolute"
             bottom={0}

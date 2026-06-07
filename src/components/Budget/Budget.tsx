@@ -18,7 +18,6 @@ import {
 } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import { useBudget } from "../../hooks/useBudget";
-import { LoadingState } from "../LoadingState";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { ExpensesManager } from "./ExpensesManager";
 import { CategoriesManager } from "./CategoriesManager";
@@ -82,8 +81,6 @@ export function Budget() {
     });
   };
 
-  if (isLoading) return <LoadingState />;
-
   return (
     <Container size="lg" py="xl" pos="relative">
       <Button
@@ -100,7 +97,6 @@ export function Budget() {
 
       <Grid>
         <Grid.Col span={{ base: 12, md: 4 }}>
-          {" "}
           <CategoriesManager
             categories={categories}
             onAddCategory={addCategory}
@@ -114,6 +110,7 @@ export function Budget() {
             categories={categories}
             onAddExpense={addExpense}
             onDeleteExpense={deleteExpense}
+            isLoading={isLoading}
           />
         </Grid.Col>
       </Grid>

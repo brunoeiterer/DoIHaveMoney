@@ -10,14 +10,10 @@ import {
   ActionIcon,
   Text,
   Box,
+  ScrollArea,
 } from "@mantine/core";
 import { DateInput, type DateValue } from "@mantine/dates";
-import {
-  IconTrash,
-  IconPlus,
-  IconChevronUp,
-  IconChevronDown,
-} from "@tabler/icons-react";
+import { IconTrash, IconPlus } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import type { Expense } from "../../lib/types/expense";
 import type { Category } from "../../lib/types/category";
@@ -25,8 +21,9 @@ import type { Category } from "../../lib/types/category";
 interface ExpensesManagerProps {
   expenses: Expense[];
   categories: Category[];
-  onAddExpense: (expense: Expense) => void;
-  onDeleteExpense: (id: number) => void;
+  onAddExpense: (expense: Expense) => Promise<void>;
+  onDeleteExpense: (id: number) => Promise<void>;
+  isLoading: boolean;
 }
 
 export function ExpensesManager({
@@ -40,36 +37,43 @@ export function ExpensesManager({
   const [amount, setAmount] = useState<string | number>(0);
   const [category, setCategory] = useState<string | null>(null);
   const [date, setDate] = useState<DateValue | null>(new Date());
-  const [opened, setOpened] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!desc || !amount || !category) return;
 
-    onAddExpense({
-      description: desc,
-      amount: Number(amount),
-      category: category,
-      date: new Date().toISOString().split("T")[0],
-    });
+    setIsSubmitting(true);
+
+    try {
+      await onAddExpense({
+        description: desc,
+        amount: Number(amount),
+        category: category,
+        date: new Date().toISOString().split("T")[0],
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
 
     setDesc("");
     setAmount(0);
     setCategory(null);
   };
 
+  const handleDelete = async (id: number) => {
+    setIsSubmitting(true);
+    try {
+      await onDeleteExpense(id);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <Paper withBorder p="md" radius="md">
+    <Paper withBorder p="md" radius="md" h={"500px"}>
       <Group justify="space-between" mb="md">
         <Title order={4}>{t("Expenses")}</Title>
-        <ActionIcon
-          variant="subtle"
-          color="gray"
-          onClick={() => setOpened((o) => !o)}
-          aria-label="Toggle expenses table"
-        >
-          {opened ? <IconChevronUp size={20} /> : <IconChevronDown size={20} />}
-        </ActionIcon>
       </Group>
 
       <form onSubmit={handleSubmit}>
@@ -109,82 +113,65 @@ export function ExpensesManager({
             style={{ flex: 1 }}
             required
           />
-          <ActionIcon type="submit" size="lg" color="emerald" variant="filled">
+          <ActionIcon
+            type="submit"
+            size="lg"
+            color="emerald"
+            variant="filled"
+            disabled={isSubmitting}
+          >
             <IconPlus size={18} />
           </ActionIcon>
         </Group>
       </form>
 
-      <Box pos="relative">
-        <div
-          style={{
-            maxHeight: opened ? "2000px" : "180px",
-            overflow: "hidden",
-          }}
-        >
-          <Table horizontalSpacing="sm" verticalSpacing="xs">
-            <Table.Thead>
+      <ScrollArea h={300}>
+        <Table horizontalSpacing="sm" verticalSpacing="xs">
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>{t("Date")}</Table.Th>
+              <Table.Th>{t("Description")}</Table.Th>
+              <Table.Th>{t("Category")}</Table.Th>
+              <Table.Th style={{ textAlign: "right" }}>{t("Amount")}</Table.Th>
+              <Table.Th aria-label="actions" />
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {expenses.length === 0 ? (
               <Table.Tr>
-                <Table.Th>{t("Date")}</Table.Th>
-                <Table.Th>{t("Description")}</Table.Th>
-                <Table.Th>{t("Category")}</Table.Th>
-                <Table.Th style={{ textAlign: "right" }}>
-                  {t("Amount")}
-                </Table.Th>
-                <Table.Th aria-label="actions" />
+                <Table.Td colSpan={5} style={{ textAlign: "center" }}>
+                  <Text c="dimmed" py="md">
+                    {t("NoExpensesThisMonth")}
+                  </Text>
+                </Table.Td>
               </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {expenses.length === 0 ? (
-                <Table.Tr>
-                  <Table.Td colSpan={5} style={{ textAlign: "center" }}>
-                    <Text c="dimmed" py="md">
-                      {t("NoExpensesThisMonth")}
-                    </Text>
+            ) : (
+              expenses.map((expense) => (
+                <Table.Tr key={expense.id}>
+                  <Table.Td style={{ whiteSpace: "nowrap" }}>
+                    {expense.date}
+                  </Table.Td>{" "}
+                  <Table.Td>{expense.description}</Table.Td>
+                  <Table.Td>{expense.category}</Table.Td>
+                  <Table.Td style={{ textAlign: "right", fontWeight: 600 }}>
+                    ${expense.amount.toFixed(2)}
+                  </Table.Td>
+                  <Table.Td style={{ textAlign: "right" }}>
+                    <ActionIcon
+                      color="red"
+                      variant="subtle"
+                      onClick={() => handleDelete(expense.id!)}
+                      disabled={isSubmitting}
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
                   </Table.Td>
                 </Table.Tr>
-              ) : (
-                expenses.map((expense) => (
-                  <Table.Tr key={expense.id}>
-                    <Table.Td style={{ whiteSpace: "nowrap" }}>
-                      {expense.date}
-                    </Table.Td>{" "}
-                    <Table.Td>{expense.description}</Table.Td>
-                    <Table.Td>{expense.category}</Table.Td>
-                    <Table.Td style={{ textAlign: "right", fontWeight: 600 }}>
-                      ${expense.amount.toFixed(2)}
-                    </Table.Td>
-                    <Table.Td style={{ textAlign: "right" }}>
-                      <ActionIcon
-                        color="red"
-                        variant="subtle"
-                        onClick={() => onDeleteExpense(expense.id!!)}
-                      >
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Table.Td>
-                  </Table.Tr>
-                ))
-              )}
-            </Table.Tbody>
-          </Table>
-        </div>
-
-        {!opened && expenses.length > 2 && (
-          <Box
-            pos="absolute"
-            bottom={0}
-            left={0}
-            right={0}
-            h={80}
-            style={{
-              background:
-                "linear-gradient(to bottom, transparent, var(--mantine-color-paper, var(--mantine-color-body)))",
-              pointerEvents: "none",
-            }}
-          />
-        )}
-      </Box>
+              ))
+            )}
+          </Table.Tbody>
+        </Table>
+      </ScrollArea>
     </Paper>
   );
 }
