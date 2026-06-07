@@ -107,7 +107,7 @@ export function ExpensesManager({
             style={{ flex: 1 }}
             required
           />
-          <ActionIcon type="submit" size="xl" color="blue" variant="filled">
+          <ActionIcon type="submit" size="lg" color="emerald" variant="filled">
             <IconPlus size={18} />
           </ActionIcon>
         </Group>

@@ -65,7 +65,6 @@ export function CategoriesManager({
         </ActionIcon>
       </Group>
 
-      {/* Quick Add Form Row */}
       <form onSubmit={handleSubmit}>
         <Group align="flex-end" mb="xl" gap="xs">
           <TextInput
@@ -78,7 +77,7 @@ export function CategoriesManager({
             style={{ flex: 1 }}
             required
           />
-          <ActionIcon type="submit" size="xl" color="blue" variant="filled">
+          <ActionIcon type="submit" size="lg" color="emerald" variant="filled">
             <IconPlus size={18} />
           </ActionIcon>
         </Group>
