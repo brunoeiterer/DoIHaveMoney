@@ -97,20 +97,6 @@ export function Budget() {
         <Title order={2}>{budgetName}</Title>
       </Center>
 
-      <Paper withBorder radius="md" mb="xl">
-        <Group justify="space-between">
-          <ActionIcon variant="subtle" size="lg" onClick={handlePrevMonth}>
-            <IconChevronLeft size={20} />
-          </ActionIcon>
-          <Text fw={700} size="lg" style={{ textTransform: "capitalize" }}>
-            {formatDisplayMonth(currentMonth)}
-          </Text>
-          <ActionIcon variant="subtle" size="lg" onClick={handleNextMonth}>
-            <IconChevronRight size={20} />
-          </ActionIcon>
-        </Group>
-      </Paper>
-
       <Grid>
         <Grid.Col span={{ base: 12, md: 4 }}>
           {" "}
@@ -130,6 +116,20 @@ export function Budget() {
           />
         </Grid.Col>
       </Grid>
+
+      <Paper withBorder radius="md" mb="xl" mt="xl">
+        <Group justify="space-between">
+          <ActionIcon variant="subtle" size="lg" onClick={handlePrevMonth}>
+            <IconChevronLeft size={20} />
+          </ActionIcon>
+          <Text fw={700} size="lg" style={{ textTransform: "capitalize" }}>
+            {formatDisplayMonth(currentMonth)}
+          </Text>
+          <ActionIcon variant="subtle" size="lg" onClick={handleNextMonth}>
+            <IconChevronRight size={20} />
+          </ActionIcon>
+        </Group>
+      </Paper>
     </Container>
   );
 }

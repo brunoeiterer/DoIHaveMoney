@@ -1,3 +1,6 @@
+import type { Category } from "./types/category";
+import type { Expense } from "./types/expense";
+
 export async function createBudgetSpreadsheet(
   budgetName: string,
   folderId: string,
@@ -88,18 +91,26 @@ export async function fetchBudgetData(spreadsheetId: string, token: string) {
   const dataSheetValues = data.valueRanges[0].values || [];
   const categoriesSheetValues = data.valueRanges[1].values || [];
 
-  const expenses = dataSheetValues.map((row: any[], index: number) => ({
-    id: index,
-    date: row[0] || "",
-    description: row[1] || "",
-    category: row[2] || "",
-    amount: parseFloat(row[3] || "0"),
-  }));
+  const expenses: Expense[] = dataSheetValues.map(
+    (row: any[], index: number) => ({
+      id: index,
+      date: row[0] || "",
+      description: row[1] || "",
+      category: row[2] || "",
+      amount: parseFloat(row[3] || "0"),
+    }),
+  );
 
-  const categories = categoriesSheetValues.map((row: any[], index: number) => ({
-    id: index,
-    name: row[0] || "",
-  }));
+  expenses.reverse();
+
+  const categories: Category[] = categoriesSheetValues.map(
+    (row: any[], index: number) => ({
+      id: index,
+      name: row[0] || "",
+    }),
+  );
+
+  categories.reverse();
 
   return { expenses, categories };
 }
