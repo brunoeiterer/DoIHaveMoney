@@ -19,11 +19,13 @@ import {
   IconChevronDown,
 } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
+import type { Expense } from "../../lib/types/expense";
+import type { Category } from "../../lib/types/category";
 
 interface ExpensesManagerProps {
-  expenses: any[];
-  categories: any[];
-  onAddExpense: (expense: any) => void;
+  expenses: Expense[];
+  categories: Category[];
+  onAddExpense: (expense: Expense) => void;
   onDeleteExpense: (id: number) => void;
 }
 
@@ -48,7 +50,7 @@ export function ExpensesManager({
       description: desc,
       amount: Number(amount),
       category: category,
-      date: new Date().toISOString().split("T")[0], // Saves current date YYYY-MM-DD
+      date: new Date().toISOString().split("T")[0],
     });
 
     setDesc("");
@@ -156,7 +158,7 @@ export function ExpensesManager({
                       <ActionIcon
                         color="red"
                         variant="subtle"
-                        onClick={() => onDeleteExpense(expense.id)}
+                        onClick={() => onDeleteExpense(expense.id!!)}
                       >
                         <IconTrash size={16} />
                       </ActionIcon>

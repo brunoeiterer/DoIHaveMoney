@@ -16,9 +16,10 @@ import {
   IconChevronDown,
 } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
+import type { Category } from "../../lib/types/category";
 
 interface CategoriesManagerProps {
-  categories: any[];
+  categories: Category[];
   onAddCategory: (category: { name: string }) => void;
   onDeleteCategory: (id: number) => void;
 }
