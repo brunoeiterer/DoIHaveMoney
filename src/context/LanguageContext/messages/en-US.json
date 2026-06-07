@@ -3,6 +3,8 @@
         "ButtonText": "Connect Google Drive & Sheets",
         "ConnectGoogleDriveAndSheets": "Connect Google Drive & Google Sheets",
         "ConnectionRequirementExplanation": "To create and manage your budget data, Do I Have Money needs permission to access Google Drive and Google Sheets.",
+        "ErrorTitle": "Error",
+        "ErrorMessage": "It was not possible to authorize the access. Please try again later.",
         "RevokeAccessNotice": "Access can be revoked anytime from your Google Account settings.",
         "StorageLine": "Store your budget in your own Google account.",
         "Setup": "Setup"

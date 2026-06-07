@@ -16,40 +16,78 @@ import { FeatureItem } from "./FeatureItem";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext/AuthContext";
 import { useNavigate } from "react-router";
+import { useState } from "react";
+import { LoadingState } from "./LoadingState";
+import { notifications } from "@mantine/notifications";
 
 export function Authorization() {
     const { translations } = useLanguage('Authorization');
     const { email, name, pictureLink, setAccessToken } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleConnectClick = useGoogleLogin({
+    const googleLogin = useGoogleLogin({
         flow: 'auth-code',
         scope: 'https://www.googleapis.com/auth/drive.file',
         hint: email,
         onSuccess: async (codeResponse) => {
-            const response = await fetch('/api/auth-exchange', {
-                method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    code: codeResponse.code,
-                    userProfile: {
-                        email,
-                        name,
-                        pictureLink
-                    }
-                })
-            });
-            
-            const data = await response.json();
-            setAccessToken(data.accessToken);
+            try {
+                const response = await fetch('/api/auth-exchange', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        code: codeResponse.code,
+                        userProfile: {
+                            email,
+                            name,
+                            pictureLink
+                        }
+                    })
+                });
 
-            navigate('/budgets');
+                const data = await response.json();
+                setAccessToken(data.accessToken);
+
+                navigate('/budgets');
+            }
+            catch {
+                notifications.show({
+                    title: translations['ErrorTitle'],
+                    message: translations['ErrorMessage'],
+                    color: 'red'
+                });
+            }
+        },
+        onError: () => {
+            notifications.show({
+                title: translations['ErrorTitle'],
+                message: translations['ErrorMessage'],
+                color: 'red'
+            });
+            setIsLoading(false);
+        },
+        onNonOAuthError: () => {
+            notifications.show({
+                title: translations['ErrorTitle'],
+                message: translations['ErrorMessage'],
+                color: 'red'
+            });
+            setIsLoading(false);
         }
+
     });
 
+    const handleConnectClick = () => {
+        setIsLoading(true);
+        googleLogin();
+    }
+
     return (
+        isLoading ? 
+        <LoadingState /> :
+        
         <Center mih="calc(100vh - 60px)">
             <Paper
                 p="xl"
