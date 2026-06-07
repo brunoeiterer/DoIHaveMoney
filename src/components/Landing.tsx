@@ -50,7 +50,7 @@ export function Landing() {
                         <GoogleLogin
                             onSuccess={(credentialResponse) => {
                                 const profile = jwtDecode<GoogleJwt>(credentialResponse.credential!);
-                                signIn(profile.name, profile.email, profile.picture);
+                                signIn(profile.email, profile.name, profile.picture);
                                 navigate('/authorization');
                             }}
                             onError={() => {
