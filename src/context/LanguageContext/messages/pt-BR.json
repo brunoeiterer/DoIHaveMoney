@@ -1,49 +1,49 @@
 {
-    "Authorization": {
-        "ButtonText": "Conecte o Google Drive e Google Sheets",
-        "ConnectGoogleDriveAndSheets": "Conecte o Google Drive e Google Sheets",
-        "ConnectionRequirementExplanation": "Para criar e gerenciar seus orçamentos o Do I Have Money precisa de autorização para acessar o seu Google Drive e Google Sheets.",
-        "ErrorTitle": "Erro",
-        "ErrorMessage": "Não foi possível autorizar o acesso. Por favor, tente novamente mais tarde.",
-        "RevokeAccessNotice": "O acesso pode ser removido a qualquer momento através das configurações da sua conta Google.",
-        "StorageLine": "Armazene seus orçamentos na sua própria conta do Google.",
-        "Setup": "Configuração"
-    },
+  "Authorization": {
+    "ButtonText": "Conecte o Google Drive e Google Sheets",
+    "ConnectGoogleDriveAndSheets": "Conecte o Google Drive e Google Sheets",
+    "ConnectionRequirementExplanation": "Para criar e gerenciar seus orçamentos o Do I Have Money precisa de autorização para acessar o seu Google Drive e Google Sheets.",
+    "ErrorTitle": "Erro",
+    "ErrorMessage": "Não foi possível autorizar o acesso. Por favor, tente novamente mais tarde.",
+    "RevokeAccessNotice": "O acesso pode ser removido a qualquer momento através das configurações da sua conta Google.",
+    "StorageLine": "Armazene seus orçamentos na sua própria conta do Google.",
+    "Setup": "Configuração"
+  },
 
-    "Budgets": {
-        "Budgets": "Orçamentos",
-        "CreateNewBudget": "Criar novo orçamento",
-        "NoBudgetsFound": "Nenhum orçamento encontrado no seu Google Drive.",
-        "SelectOrCreate": "Selecione um orçamento ou crie um novo para começar.",
-        "SyncErrorTitle": "Erro",
-        "SyncErrorMessage": "Um erro ocorreu ao carregar os orçamentos. Por favor, recarregue a página.",
-        "YourBudgets": "Seus Orçamentos"
-    },
+  "Budgets": {
+    "Budgets": "Orçamentos",
+    "CreateNewBudget": "Criar novo orçamento",
+    "NoBudgetsFound": "Nenhum orçamento encontrado no seu Google Drive.",
+    "SelectOrCreate": "Selecione um orçamento ou crie um novo para começar.",
+    "SyncErrorTitle": "Erro",
+    "SyncErrorMessage": "Um erro ocorreu ao carregar os orçamentos. Por favor, recarregue a página.",
+    "YourBudgets": "Seus Orçamentos"
+  },
 
-    "CreateNewBudget": {
-        "CreateFailed": "Um erro occoreu ao criar o orçamento, por favor, tente novamente mais tarde.",
-        "NameAlreadyExists": "Já existe um orçamento com este nome.",
-        "NameEmptyError": "O nome não pode ser vazio.",
-        "NamePlaceholder": "Digite o nome do orçamento..."
-    },
+  "CreateNewBudget": {
+    "CreateFailed": "Um erro occoreu ao criar o orçamento, por favor, tente novamente mais tarde.",
+    "NameAlreadyExists": "Já existe um orçamento com este nome.",
+    "NameEmptyError": "O nome não pode ser vazio.",
+    "NamePlaceholder": "Digite o nome do orçamento..."
+  },
 
-    "LoadingState": {
-        "Loading": "Carregando..."
-    },
+  "LoadingState": {
+    "Loading": "Carregando..."
+  },
 
-    "Login": {
-        "BudgetTracker": "Orçamento Pessoal",
-        "GoogleSheetsStorage": "Armazenamento no Google Sheets.",
-        "Headline": "Orçamento simples movido pelo Google Sheets.",
-        "NoSubscriptions": "Sem mensalidade.",
-        "PrivateByDefault": "Privado por padrão.",
-        "SignInFailedTitle": "Falha ao entrar.",
-        "SingInFailedMessage": "Falha ao entrar,  por favor, tente novamente mais tarde.",
-        "Slogan": "Saiba exatamente para onde está indo seu dinheiro."
-    },
+  "Login": {
+    "BudgetTracker": "Orçamento Pessoal",
+    "GoogleSheetsStorage": "Armazenamento no Google Sheets.",
+    "Headline": "Orçamento simples movido pelo Google Sheets.",
+    "NoSubscriptions": "Sem mensalidade.",
+    "PrivateByDefault": "Privado por padrão.",
+    "SignInFailedTitle": "Falha ao entrar.",
+    "SingInFailedMessage": "Falha ao entrar,  por favor, tente novamente mais tarde.",
+    "Slogan": "Saiba exatamente para onde está indo seu dinheiro."
+  },
 
-    "TopBar": {
-        "Account": "Conta",
-        "SignOut": "Sair"
-    }
+  "TopBar": {
+    "Account": "Conta",
+    "SignOut": "Sair"
+  }
 }

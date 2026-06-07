@@ -1,4 +1,4 @@
 export interface BudgetFile {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 }

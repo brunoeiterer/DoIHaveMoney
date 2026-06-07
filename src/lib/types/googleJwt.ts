@@ -1,5 +1,5 @@
 export interface GoogleJwt {
-    email: string;
-    name: string;
-    picture: string;
+  email: string;
+  name: string;
+  picture: string;
 }
