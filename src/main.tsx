@@ -14,6 +14,16 @@ import { TopBar } from './components/TopBar.tsx'
 import { Authorization } from './components/Authorization.tsx'
 import { Budgets } from './components/Budgets.tsx'
 import { ProtectedRoute } from './components/ProtectedRoute.tsx'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 10,
+    },
+  },
+})
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -21,6 +31,7 @@ createRoot(document.getElementById('root')!).render(
             <Notifications />
             <LanguageProvider>
                 <AuthProvider>
+                    <QueryClientProvider client={queryClient}>
                     <TopBar />
                     <GoogleOAuthProvider clientId={'1044533121358-2rs5bvb5cinl5s4lj4srncvon1tavvk3.apps.googleusercontent.com'}>
                         <BrowserRouter>
@@ -35,6 +46,7 @@ createRoot(document.getElementById('root')!).render(
                             </Routes>
                         </BrowserRouter>
                     </GoogleOAuthProvider>
+                    </QueryClientProvider>
                 </AuthProvider>
             </LanguageProvider>
         </MantineProvider>

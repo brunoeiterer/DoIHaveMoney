@@ -11,7 +11,24 @@
     },
 
     "Budgets": {
+        "Budgets": "Orçamentos",
+        "CreateNewBudget": "Criar novo orçamento",
+        "NoBudgetsFound": "Nenhum orçamento encontrado no seu Google Drive.",
+        "SelectOrCreate": "Selecione um orçamento ou crie um novo para começar.",
+        "SyncErrorTitle": "Erro",
+        "SyncErrorMessage": "Um erro ocorreu ao carregar os orçamentos. Por favor, recarregue a página.",
+        "YourBudgets": "Seus Orçamentos"
+    },
 
+    "CreateNewBudget": {
+        "CreateFailed": "Um erro occoreu ao criar o orçamento, por favor, tente novamente mais tarde.",
+        "NameAlreadyExists": "Já existe um orçamento com este nome.",
+        "NameEmptyError": "O nome não pode ser vazio.",
+        "NamePlaceholder": "Digite o nome do orçamento..."
+    },
+
+    "LoadingState": {
+        "Loading": "Carregando..."
     },
 
     "Login": {

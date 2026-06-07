@@ -1,85 +1,81 @@
-import { useState, useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../context/AuthContext/AuthContext';
+import type { BudgetFile } from '../lib/types/budgetFile';
 
-export interface BudgetFile {
-    id: string;
-    name: string;
+interface FetchBudgetsResponse {
+    folderId: string;
+    budgets: BudgetFile[];
 }
 
-export function useBudgets(accessToken: string | null) {
-    const [budgets, setBudgets] = useState<BudgetFile[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [folderId, setFolderId] = useState<string | null>(null);
+export function useBudgets() {
+    const { accessToken } = useAuth();
 
-    const processedToken = useRef<string | null>(null);
+    const { data, isLoading, error } = useQuery<FetchBudgetsResponse, Error>({
+        queryKey: ['budgets', accessToken],
 
-    useEffect(() => {
-        if (!accessToken) return;
+        queryFn: async () => {
+            if (!accessToken) throw new Error("No access token provided");
 
-        if (processedToken.current === accessToken) return;
-        processedToken.current = accessToken;
+            const folderQuery = encodeURIComponent(
+                "mimeType='application/vnd.google-apps.folder' and name='DoIHaveMoney' and trashed=false"
+            );
 
-        async function initializeDrive() {
-            setIsLoading(true);
-            setError(null);
+            const folderRes = await fetch(
+                `https://www.googleapis.com/drive/v3/files?q=${folderQuery}&fields=files(id, name)`,
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            );
 
-            try {
-                const folderQuery = encodeURIComponent(
-                    "mimeType='application/vnd.google-apps.folder' and name='DoIHaveMoney' and trashed=false"
-                );
+            if (!folderRes.ok) throw new Error("Failed to check Drive folder existence");
+            const folderData = await folderRes.json();
 
-                const folderRes = await fetch(
-                    `https://www.googleapis.com/drive/v3/files?q=${folderQuery}&fields=files(id, name)`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                );
+            let currentFolderId: string;
 
-                const folderData = await folderRes.json();
-                let currentFolderId: string;
+            if (!folderData.files || folderData.files.length === 0) {
+                const createRes = await fetch('https://www.googleapis.com/drive/v3/files', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: 'DoIHaveMoney',
+                        mimeType: 'application/vnd.google-apps.folder',
+                    }),
+                });
 
-                if (!folderData.files || folderData.files.length === 0) {
-                    const createRes = await fetch('https://www.googleapis.com/drive/v3/files', {
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            name: 'DoIHaveMoney',
-                            mimeType: 'application/vnd.google-apps.folder',
-                        }),
-                    });
-
-                    const createData = await createRes.json();
-                    currentFolderId = createData.id;
-                } else {
-                    currentFolderId = folderData.files[0].id;
-                }
-
-                setFolderId(currentFolderId);
-
-                const filesQuery = encodeURIComponent(
-                    `'${currentFolderId}' in parents and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`
-                );
-
-                const filesRes = await fetch(
-                    `https://www.googleapis.com/drive/v3/files?q=${filesQuery}&fields=files(id, name)`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                );
-
-                const filesData = await filesRes.json();
-                setBudgets(filesData.files || []);
-
-            } catch (err) {
-                console.error("Drive API Error:", err);
-                setError("Failed to sync with Google Drive.");
-                processedToken.current = null;
-            } finally {
-                setIsLoading(false);
+                if (!createRes.ok) throw new Error("Failed to create app folder in Google Drive");
+                const createData = await createRes.json();
+                currentFolderId = createData.id;
+            } else {
+                currentFolderId = folderData.files[0].id;
             }
-        }
 
-        initializeDrive();
-    }, [accessToken]);
+            const filesQuery = encodeURIComponent(
+                `'${currentFolderId}' in parents and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`
+            );
 
-    return { budgets, isLoading, error, folderId };
+            const filesRes = await fetch(
+                `https://www.googleapis.com/drive/v3/files?q=${filesQuery}&fields=files(id, name)`,
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+            );
+
+            if (!filesRes.ok) throw new Error("Failed to fetch budgets from Google Drive");
+            const filesData = await filesRes.json();
+
+            return {
+                folderId: currentFolderId,
+                budgets: filesData.files || []
+            };
+        },
+
+        enabled: !!accessToken,
+        staleTime: 1000 * 60 * 5,
+    });
+
+    return {
+        budgets: data?.budgets || [],
+        folderId: data?.folderId || null,
+        isLoading,
+        error: error ? error.message : null,
+    };
 }
