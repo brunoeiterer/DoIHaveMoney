@@ -8,21 +8,20 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useLanguage } from "../context/LanguageContext/LanguageContext";
-import { useNavigate } from "react-router";
+import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import { notifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
-import { CreateNewBudget } from "./CreateNewBudget";
-import { useBudgets } from "../hooks/useBudgets";
-import { useCreateBudget } from "../hooks/useCreateBudget";
-import { LoadingState } from "./LoadingState";
+import { CreateNewBudget } from "../CreateNewBudget";
+import { useBudgets } from "../../hooks/useBudgets";
+import { useCreateBudget } from "../../hooks/useCreateBudget";
+import { LoadingState } from "../LoadingState";
 import { IconPlus } from "@tabler/icons-react";
+import { BudgetItem } from "./BudgetItem";
 
 export function Budgets() {
-  const { translations } = useLanguage("Budgets");
-  const navigate = useNavigate();
+  const { t } = useLanguage("Budgets");
 
-  const { budgets, isLoading, error, folderId } = useBudgets();
+  const { budgets, isFetching, error, folderId } = useBudgets();
   const createBudget = useCreateBudget(folderId);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -37,12 +36,12 @@ export function Budgets() {
   useEffect(() => {
     if (error) {
       notifications.show({
-        title: translations["SyncErrorTitle"],
-        message: translations["SyncErrorMessage"],
+        title: t("SyncErrorTitle"),
+        message: t("SyncErrorMessage"),
         color: "red",
       });
     }
-  }, [error, translations]);
+  }, [error, t]);
 
   return (
     <Container size="sm">
@@ -50,36 +49,32 @@ export function Budgets() {
         <Paper p="xl" radius="lg" w="100%" withBorder={false}>
           <Stack align="center" gap="lg">
             <Badge size="lg" variant="light">
-              {translations["Budgets"]}
+              {t("Budgets")}
             </Badge>
 
             <Title order={1} ta="center">
-              {translations["YourBudgets"]}
+              {t("YourBudgets")}
             </Title>
 
             <Text c="dimmed" ta="center">
-              {translations["SelectOrCreate"]}
+              {t("SelectOrCreate")}
             </Text>
 
-            {isLoading ? (
+            {isFetching ? (
               <LoadingState />
             ) : (
               <Stack w="100%" gap="sm" mt="md">
                 {budgets.length === 0 ? (
                   <Text ta="center" fs="italic" c="dimmed" py="xl">
-                    {translations["NoBudgetsFound"]}
+                    {t("NoBudgetsFound")}
                   </Text>
                 ) : (
                   budgets.map((budget) => (
-                    <Button
+                    <BudgetItem
                       key={budget.id}
-                      variant="default"
-                      size="xl"
-                      fullWidth
-                      onClick={() => navigate(`/budget/${budget.id}`)}
-                    >
-                      {budget.name}
-                    </Button>
+                      id={budget.id}
+                      name={budget.name}
+                    />
                   ))
                 )}
 
@@ -98,7 +93,7 @@ export function Budgets() {
                     leftSection={<IconPlus />}
                     onClick={() => setIsCreating(true)}
                   >
-                    {translations["CreateNewBudget"]}
+                    {t("CreateNewBudget")}
                   </Button>
                 )}
               </Stack>

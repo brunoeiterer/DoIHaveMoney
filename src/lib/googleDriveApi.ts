@@ -66,6 +66,25 @@ export async function createBudgetSpreadsheet(
   return spreadsheetId;
 }
 
+export async function deleteBudgetSpreadsheet(
+  spreadsheetId: string,
+  token: string,
+): Promise<void> {
+  const res = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${spreadsheetId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to delete spreadsheet: ${res.statusText}`);
+  }
+}
+
 export async function fetchBudgetData(spreadsheetId: string, token: string) {
   const res = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Data!A2:C`,

@@ -10,7 +10,7 @@ interface FetchBudgetsResponse {
 export function useBudgets() {
   const { accessToken } = useAuth();
 
-  const { data, isLoading, error } = useQuery<FetchBudgetsResponse, Error>({
+  const { data, isFetching, error } = useQuery<FetchBudgetsResponse, Error>({
     queryKey: ["budgets", accessToken],
 
     queryFn: async () => {
@@ -81,7 +81,7 @@ export function useBudgets() {
   return {
     budgets: data?.budgets || [],
     folderId: data?.folderId || null,
-    isLoading,
+    isFetching,
     error: error ? error.message : null,
   };
 }

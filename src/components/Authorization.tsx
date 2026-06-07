@@ -19,7 +19,7 @@ import { LoadingState } from "./LoadingState";
 import { notifications } from "@mantine/notifications";
 
 export function Authorization() {
-  const { translations } = useLanguage("Authorization");
+  const { t } = useLanguage("Authorization");
   const { email, name, pictureLink, setAccessToken } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -51,24 +51,24 @@ export function Authorization() {
         navigate("/budgets");
       } catch {
         notifications.show({
-          title: translations["ErrorTitle"],
-          message: translations["ErrorMessage"],
+          title: t("ErrorTitle"),
+          message: t("ErrorMessage"),
           color: "red",
         });
       }
     },
     onError: () => {
       notifications.show({
-        title: translations["ErrorTitle"],
-        message: translations["ErrorMessage"],
+        title: t("ErrorTitle"),
+        message: t("ErrorMessage"),
         color: "red",
       });
       setIsLoading(false);
     },
     onNonOAuthError: () => {
       notifications.show({
-        title: translations["ErrorTitle"],
-        message: translations["ErrorMessage"],
+        title: t("ErrorTitle"),
+        message: t("ErrorMessage"),
         color: "red",
       });
       setIsLoading(false);
@@ -90,28 +90,28 @@ export function Authorization() {
             <IconBrandGoogleDrive size={40} />
           </ThemeIcon>
 
-          <Badge variant="light">{translations["Setup"]}</Badge>
+          <Badge variant="light">{t("Setup")}</Badge>
 
           <Title order={2} ta="center">
-            {translations["ConnectGoogleDriveAndSheets"]}
+            {t("ConnectGoogleDriveAndSheets")}
           </Title>
 
           <Text ta="center" c="dimmed">
-            {translations["ConnectionRequirementExplanation"]}
+            {t("ConnectionRequirementExplanation")}
           </Text>
 
-          <FeatureItem>{translations["StorageLine"]}</FeatureItem>
+          <FeatureItem>{t("StorageLine")}</FeatureItem>
 
           <Button
             size="lg"
             leftSection={<IconBrandGoogleDrive size={18} />}
             onClick={handleConnectClick}
           >
-            {translations["ButtonText"]}
+            {t("ButtonText")}
           </Button>
 
           <Text size="xs" c="dimmed" ta="center">
-            {translations["RevokeAccessNotice"]}
+            {t("RevokeAccessNotice")}
           </Text>
         </Stack>
       </Paper>

@@ -10,6 +10,10 @@
     "Setup": "Setup"
   },
 
+  "BudgetItem": {
+    "ConfirmDeletionInput": "To confirm deletion, type <strong>{name}</strong> below:"
+  },
+
   "Budgets": {
     "Budgets": "Budgets",
     "CreateNewBudget": "Create new budget",

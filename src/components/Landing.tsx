@@ -18,7 +18,7 @@ import { FeatureItem } from "./FeatureItem";
 import { LoadingState } from "./LoadingState";
 
 export function Landing() {
-  const { translations } = useLanguage("Login");
+  const { t } = useLanguage("Login");
   const { signIn, isAuthenticating, accessToken } = useAuth();
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export function Landing() {
         <Paper p="xl" radius="lg" w="100%" withBorder={false}>
           <Stack align="center" gap="lg">
             <Badge size="lg" variant="light">
-              {translations["BudgetTracker"]}
+              {t("BudgetTracker")}
             </Badge>
 
             <Title order={1} ta="center">
@@ -44,11 +44,11 @@ export function Landing() {
             </Title>
 
             <Text ta="center" size="xl">
-              {translations["Slogan"]}
+              {t("Slogan")}
             </Text>
 
             <Text c="dimmed" ta="center">
-              {translations["Headline"]}
+              {t("Headline")}
             </Text>
 
             <GoogleLogin
@@ -61,19 +61,19 @@ export function Landing() {
               }}
               onError={() => {
                 notifications.show({
-                  title: translations["SignInFailedTitle"],
-                  message: translations["SignInFailedMessage"],
+                  title: t("SignInFailedTitle"),
+                  message: t("SignInFailedMessage"),
                 });
               }}
               useOneTap
             />
 
             <Stack gap="sm">
-              <FeatureItem>{translations["GoogleSheetsStorage"]}</FeatureItem>
+              <FeatureItem>{t("GoogleSheetsStorage")}</FeatureItem>
 
-              <FeatureItem>{translations["PrivateByDefault"]}</FeatureItem>
+              <FeatureItem>{t("PrivateByDefault")}</FeatureItem>
 
-              <FeatureItem>{translations["NoSubscriptions"]}</FeatureItem>
+              <FeatureItem>{t("NoSubscriptions")}</FeatureItem>
             </Stack>
           </Stack>
         </Paper>

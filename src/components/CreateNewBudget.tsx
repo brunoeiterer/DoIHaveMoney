@@ -20,13 +20,13 @@ export function CreateNewBudget({
   const [error, setError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  const { translations } = useLanguage("CreateNewBudget");
+  const { t } = useLanguage("CreateNewBudget");
 
   const handleCreateSubmit = async () => {
     const trimmedName = name.trim();
 
     if (!trimmedName) {
-      setError(translations["NameEmptyError"]);
+      setError(t("NameEmptyError"));
       return;
     }
 
@@ -35,7 +35,7 @@ export function CreateNewBudget({
     );
 
     if (isDuplicate) {
-      setError(translations["NameAlreadyExists"]);
+      setError(t("NameAlreadyExists"));
       return;
     }
 
@@ -45,7 +45,7 @@ export function CreateNewBudget({
 
       onClose();
     } catch (err) {
-      setError(translations["CreateFailed"]);
+      setError(t("CreateFailed"));
     }
 
     setIsCreating(false);
@@ -57,7 +57,7 @@ export function CreateNewBudget({
     <Paper withBorder p="sm" radius="md">
       <Group align="flex-start">
         <TextInput
-          placeholder={translations["NamePlaceholder"]}
+          placeholder={t("NamePlaceholder")}
           value={name}
           onChange={(e) => {
             setName(e.currentTarget.value);

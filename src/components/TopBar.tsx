@@ -5,7 +5,7 @@ import { useLanguage } from "../context/LanguageContext/LanguageContext";
 
 export function TopBar() {
   const { email, name, pictureLink } = useAuth();
-  const { translations } = useLanguage("TopBar");
+  const { t } = useLanguage("TopBar");
 
   return (
     <Group justify="space-between" px="md" py="sm" bg="emerald.5">
@@ -19,7 +19,7 @@ export function TopBar() {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Label>{translations["Account"]}</Menu.Label>
+          <Menu.Label>{t("Account")}</Menu.Label>
 
           <Menu.Item disabled>
             <Text size="sm">{name}</Text>
@@ -31,7 +31,7 @@ export function TopBar() {
           <Menu.Divider />
 
           <Menu.Item color="red" leftSection={<IconLogout size={14} />}>
-            {translations["SignOut"]}
+            {t("SignOut")}
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

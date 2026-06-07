@@ -12,7 +12,7 @@ import { AuthProvider } from "./context/AuthContext/AuthContext.tsx";
 import { Notifications } from "@mantine/notifications";
 import { TopBar } from "./components/TopBar.tsx";
 import { Authorization } from "./components/Authorization.tsx";
-import { Budgets } from "./components/Budgets.tsx";
+import { Budgets } from "./components/Budgets/Budgets.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 

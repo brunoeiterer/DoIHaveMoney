@@ -10,6 +10,10 @@
     "Setup": "Configuração"
   },
 
+  "BudgetItem": {
+    "ConfirmDeletionInput": "Para confirmar, digite <strong>{name}</strong> abaixo:"
+  },
+
   "Budgets": {
     "Budgets": "Orçamentos",
     "CreateNewBudget": "Criar novo orçamento",
