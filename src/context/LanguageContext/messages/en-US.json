@@ -8,6 +8,10 @@
         "Setup": "Setup"
     },
 
+    "Budgets": {
+
+    },
+
     "Login": {
         "BudgetTracker": "Budget Tracker",
         "GoogleSheetsStorage": "Google Sheets storage.",

@@ -3,15 +3,16 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { MantineProvider } from '@mantine/core'
 import { theme } from './theme.ts'
-import { Landing } from './components/Landing/Landing.tsx'
+import { Landing } from './components/Landing.tsx'
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import { LanguageProvider } from './context/LanguageContext/LanguageContext.tsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { AuthProvider } from './context/AuthContext/AuthContext.tsx'
 import { Notifications } from '@mantine/notifications'
-import { TopBar } from './components/TopBar/TopBar.tsx'
-import { Authorization } from './components/Authorization/Authorization.tsx'
+import { TopBar } from './components/TopBar.tsx'
+import { Authorization } from './components/Authorization.tsx'
+import Budgets from './components/Budgets.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
                 <Routes>
                   <Route index element={<Landing />} />
                   <Route path='authorization' element={<Authorization />} />
+                  <Route path='budgets' element={<Budgets />} />
                 </Routes>
               </BrowserRouter>
             </GoogleOAuthProvider>

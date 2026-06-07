@@ -11,14 +11,16 @@ import {
 import {
     IconBrandGoogleDrive,
 } from "@tabler/icons-react";
-import { useLanguage } from "../../context/LanguageContext/LanguageContext";
-import { FeatureItem } from "../FeatureItem/FeatureItem";
+import { useLanguage } from "../context/LanguageContext/LanguageContext";
+import { FeatureItem } from "./FeatureItem";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useAuth } from "../../context/AuthContext/AuthContext";
+import { useAuth } from "../context/AuthContext/AuthContext";
+import { useNavigate } from "react-router";
 
 export function Authorization() {
     const { translations } = useLanguage('Authorization');
     const { email, name, pictureLink, setAccessToken } = useAuth();
+    const navigate = useNavigate();
 
     const handleConnectClick = useGoogleLogin({
         flow: 'auth-code',
@@ -42,6 +44,8 @@ export function Authorization() {
             
             const data = await response.json();
             setAccessToken(data.accessToken);
+
+            navigate('/budgets');
         }
     });
 

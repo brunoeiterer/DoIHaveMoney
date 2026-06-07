@@ -6,8 +6,8 @@ import {
     UnstyledButton,
 } from "@mantine/core";
 import { IconLogout } from "@tabler/icons-react";
-import { useAuth } from "../../context/AuthContext/AuthContext";
-import { useLanguage } from "../../context/LanguageContext/LanguageContext";
+import { useAuth } from "../context/AuthContext/AuthContext";
+import { useLanguage } from "../context/LanguageContext/LanguageContext";
 
 export function TopBar() {
     const { email, name, pictureLink} = useAuth();

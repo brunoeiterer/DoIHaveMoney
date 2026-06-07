@@ -7,14 +7,14 @@ import {
     Text,
     Title,
 } from "@mantine/core";
-import { useLanguage } from "../../context/LanguageContext/LanguageContext";
+import { useLanguage } from "../context/LanguageContext/LanguageContext";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { useAuth } from "../../context/AuthContext/AuthContext";
+import { useAuth } from "../context/AuthContext/AuthContext";
 import { notifications } from "@mantine/notifications";
-import type { GoogleJwt } from "../../lib/types/googleJwt";
+import type { GoogleJwt } from "../lib/types/googleJwt";
 import { useNavigate } from "react-router";
-import { FeatureItem } from "../FeatureItem/FeatureItem";
+import { FeatureItem } from "./FeatureItem";
 
 export function Landing() {
     const { translations } = useLanguage('Login');

@@ -8,6 +8,10 @@
         "Setup": "Configuração"
     },
 
+    "Budgets": {
+
+    },
+
     "Login": {
         "BudgetTracker": "Orçamento Pessoal",
         "GoogleSheetsStorage": "Armazenamento no Google Sheets.",
