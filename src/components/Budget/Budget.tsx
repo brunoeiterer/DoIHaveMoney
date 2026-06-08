@@ -18,24 +18,16 @@ import {
 } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import { useBudget } from "../../hooks/useBudget";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { ExpensesManager } from "./ExpensesManager";
 import { CategoriesManager } from "./CategoriesManager";
-import type { BudgetFile } from "../../lib/types/budgetFile";
 import { MonthlyTotals } from "./MonthlyTotals";
-
-interface BudgetState {
-  budgetFile: BudgetFile;
-}
+import { LoadingState } from "../LoadingState";
 
 export function Budget() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useLanguage("Budget");
-  const location = useLocation();
-
-  const state = location.state as BudgetState;
-  const budgetName = state.budgetFile.name;
 
   const [currentMonth, setCurrentMonth] = useState(() => {
     const now = new Date();
@@ -43,6 +35,7 @@ export function Budget() {
   });
 
   const {
+    budgetName,
     expenses,
     categories,
     isLoading,
@@ -50,11 +43,11 @@ export function Budget() {
     deleteExpense,
     addCategory,
     deleteCategory,
-  } = useBudget(
-    id,
-    state.budgetFile.sheetIds["Data"],
-    state.budgetFile.sheetIds["Categories"],
-  );
+  } = useBudget(id);
+
+  if (isLoading) {
+    return <LoadingState fullScreen />;
+  }
 
   const handlePrevMonth = () => {
     const [year, month] = currentMonth.split("-").map(Number);
@@ -110,7 +103,6 @@ export function Budget() {
             categories={categories}
             onAddExpense={addExpense}
             onDeleteExpense={deleteExpense}
-            isLoading={isLoading}
           />
         </Grid.Col>
       </Grid>

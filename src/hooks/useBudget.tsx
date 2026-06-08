@@ -6,20 +6,25 @@ import {
   deleteSheetRow,
   fetchBudgetData,
 } from "../lib/googleDriveApi";
+import { useState } from "react";
 
-export function useBudget(
-  spreadsheetId: string | undefined,
-  dataSheetId: number,
-  categoriesSheetId: number,
-) {
+export function useBudget(spreadsheetId: string | undefined) {
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
+
+  const [dataSheetId, setDataSheetId] = useState<number>();
+  const [categoriesSheetId, setCategoriesSheetId] = useState<number>();
 
   const query = useQuery({
     queryKey: ["budget", spreadsheetId],
     queryFn: async () => {
       if (!accessToken || !spreadsheetId) throw new Error("Missing auth or ID");
-      return fetchBudgetData(spreadsheetId, accessToken);
+      const data = await fetchBudgetData(spreadsheetId, accessToken);
+
+      setDataSheetId(data.metadata.sheetMap["Data"]);
+      setCategoriesSheetId(data.metadata.sheetMap["Categories"]);
+
+      return data;
     },
     enabled: !!accessToken && !!spreadsheetId,
   });
@@ -49,7 +54,12 @@ export function useBudget(
 
   const deleteExpense = useMutation({
     mutationFn: async (rowIndex: number) => {
-      await deleteSheetRow(spreadsheetId!, dataSheetId, rowIndex, accessToken!);
+      await deleteSheetRow(
+        spreadsheetId!,
+        dataSheetId!,
+        rowIndex,
+        accessToken!,
+      );
     },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] }),
@@ -59,7 +69,7 @@ export function useBudget(
     mutationFn: async (rowIndex: number) => {
       await deleteSheetRow(
         spreadsheetId!,
-        categoriesSheetId,
+        categoriesSheetId!,
         rowIndex,
         accessToken!,
       );
@@ -69,9 +79,10 @@ export function useBudget(
   });
 
   return {
+    budgetName: query.data?.metadata.title,
     expenses: query.data?.expenses || [],
     categories: query.data?.categories || [],
-    isLoading: query.isFetching,
+    isLoading: query.isLoading,
     error: query.error,
     addExpense: addExpense.mutateAsync,
     addCategory: addCategory.mutateAsync,

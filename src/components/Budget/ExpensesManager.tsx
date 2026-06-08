@@ -9,7 +9,6 @@ import {
   Select,
   ActionIcon,
   Text,
-  Box,
   ScrollArea,
 } from "@mantine/core";
 import { DateInput, type DateValue } from "@mantine/dates";
@@ -23,7 +22,6 @@ interface ExpensesManagerProps {
   categories: Category[];
   onAddExpense: (expense: Expense) => Promise<void>;
   onDeleteExpense: (id: number) => Promise<void>;
-  isLoading: boolean;
 }
 
 export function ExpensesManager({

@@ -112,7 +112,9 @@ export async function fetchBudgetData(spreadsheetId: string, token: string) {
 
   categories.reverse();
 
-  return { expenses, categories };
+  const metadata = await getSpreadsheetMetadata(spreadsheetId, token);
+
+  return { metadata, expenses, categories };
 }
 
 export async function addExpenseToSheet(
@@ -193,16 +195,24 @@ export async function getSpreadsheetMetadata(
   spreadsheetId: string,
   token: string,
 ) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties(sheetId,title)`;
-  const res = await fetch(url, {
+  let url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties(sheetId,title)`;
+  let res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  const data = await res.json();
+  let data = await res.json();
 
   const sheetMap: Record<string, number> = {};
   data.sheets.forEach((s: any) => {
     sheetMap[s.properties.title] = s.properties.sheetId;
   });
 
-  return sheetMap;
+  url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=properties.title`;
+  res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  data = await res.json();
+
+  const title = data.properties.title as string;
+
+  return { title, sheetMap };
 }
