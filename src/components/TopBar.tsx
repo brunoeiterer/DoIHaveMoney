@@ -2,10 +2,17 @@ import { Avatar, Group, Menu, Text, UnstyledButton } from "@mantine/core";
 import { IconLogout } from "@tabler/icons-react";
 import { useAuth } from "../context/AuthContext/AuthContext";
 import { useLanguage } from "../context/LanguageContext/LanguageContext";
+import { useNavigate } from "react-router";
 
 export function TopBar() {
-  const { email, name, pictureLink } = useAuth();
+  const { email, name, pictureLink, signOut } = useAuth();
   const { t } = useLanguage("TopBar");
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate("/");
+  };
 
   return (
     <Group justify="space-between" px="md" py="sm" bg="emerald.5">
@@ -30,7 +37,11 @@ export function TopBar() {
 
           <Menu.Divider />
 
-          <Menu.Item color="red" leftSection={<IconLogout size={14} />}>
+          <Menu.Item
+            color="red"
+            leftSection={<IconLogout size={14} />}
+            onClick={handleSignOut}
+          >
             {t("SignOut")}
           </Menu.Item>
         </Menu.Dropdown>

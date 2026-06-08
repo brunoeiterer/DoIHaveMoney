@@ -34,13 +34,13 @@ createRoot(document.getElementById("root")!).render(
       <LanguageProvider>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
-            <TopBar />
-            <GoogleOAuthProvider
-              clientId={
-                "1044533121358-2rs5bvb5cinl5s4lj4srncvon1tavvk3.apps.googleusercontent.com"
-              }
-            >
-              <BrowserRouter>
+            <BrowserRouter>
+              <TopBar />
+              <GoogleOAuthProvider
+                clientId={
+                  "1044533121358-2rs5bvb5cinl5s4lj4srncvon1tavvk3.apps.googleusercontent.com"
+                }
+              >
                 <Routes>
                   <Route index element={<Landing />} />
                   <Route element={<ProtectedRoute redirectIfFullyAuthorized />}>
@@ -53,8 +53,8 @@ createRoot(document.getElementById("root")!).render(
                     <Route path="budgets/:id" element={<Budget />} />
                   </Route>
                 </Routes>
-              </BrowserRouter>
-            </GoogleOAuthProvider>
+              </GoogleOAuthProvider>
+            </BrowserRouter>
           </QueryClientProvider>
         </AuthProvider>
       </LanguageProvider>

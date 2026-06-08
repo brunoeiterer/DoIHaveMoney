@@ -6,6 +6,7 @@ interface AuthContextType {
   pictureLink: string;
   isSignedIn: boolean;
   signIn: (email: string, name: string, pictureLink: string) => void;
+  signOut: () => void;
   isAuthenticating: boolean;
   accessToken: string;
   setAccessToken: (accessToken: string) => void;
@@ -37,6 +38,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setPictureLink(pictureLink);
 
     setIsSignedIn(true);
+  };
+
+  const signOut = async () => {
+    setEmail("");
+    setName("");
+    setPictureLink("");
+    setAccessToken("");
+
+    await fetch("/api/signout", { method: "POST" });
   };
 
   useEffect(() => {
@@ -76,6 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         pictureLink,
         isSignedIn,
         signIn,
+        signOut,
         isAuthenticating,
         accessToken,
         setAccessToken,

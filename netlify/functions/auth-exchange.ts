@@ -9,9 +9,6 @@ export default async (req: Request) => {
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
   });
 
-  console.log(JSON.stringify(oAuth2Client));
-  console.log(JSON.stringify({ code, userProfile }));
-
   let tokens: Credentials;
 
   try {
