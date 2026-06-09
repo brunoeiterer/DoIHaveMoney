@@ -17,7 +17,10 @@
 
   "BudgetItem": {
     "ConfirmDeletionInput": "Para confirmar, digite <strong>{name}</strong> abaixo:",
-    "DeleteForever": "Deletar Para Sempre"
+    "DeleteForever": "Deletar Para Sempre",
+    "Email": "Email",
+    "EnterEmail": "Digite o email",
+    "Share": "Compartilhar"
   },
 
   "Budgets": {

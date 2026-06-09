@@ -8,6 +8,13 @@ interface FetchBudgetsResponse {
   budgets: BudgetFile[];
 }
 
+interface DriveFile {
+  id: string;
+  name: string;
+  parents?: string[];
+  owners: Array<{ emailAddress: string; displayName: string }>;
+}
+
 export function useBudgets() {
   const { accessToken } = useAuth();
 
@@ -56,32 +63,53 @@ export function useBudgets() {
         currentFolderId = folderData.files[0].id;
       }
 
-      const filesQuery = encodeURIComponent(
-        `'${currentFolderId}' in parents and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`,
-      );
+      const query =
+        "trashed = false and mimeType = 'application/vnd.google-apps.spreadsheet'";
+      const fields = "files(id, name, parents, owners)";
+      const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=${encodeURIComponent(fields)}`;
 
-      const filesRes = await fetch(
-        `https://www.googleapis.com/drive/v3/files?q=${filesQuery}&fields=files(id, name)`,
-        { headers: { Authorization: `Bearer ${accessToken}` } },
-      );
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
-      if (!filesRes.ok)
-        throw new Error("Failed to fetch budgets from Google Drive");
-      const filesData = await filesRes.json();
+      const data = await response.json();
+      const allFiles: DriveFile[] = data.files || [];
 
-      const budgetsWithMetadata = await Promise.all(
-        filesData.files.map(async (file: { id: string; name: string }) => {
-          const sheetMap = await getSpreadsheetMetadata(file.id, accessToken);
-          return {
-            ...file,
-            sheetIds: sheetMap,
-          };
+      await Promise.all(
+        allFiles.map(async (file) => {
+          const isInsideLocalFolder = file.parents?.includes(currentFolderId);
+
+          if (!isInsideLocalFolder) {
+            await fetch(
+              `https://www.googleapis.com/drive/v3/files/${file.id}?addParents=${currentFolderId}`,
+              {
+                method: "PATCH",
+                headers: { Authorization: `Bearer ${accessToken}` },
+              },
+            );
+          }
         }),
       );
 
+      const budgetsWithMetadata = await Promise.all(
+        allFiles.map(
+          async (file: {
+            id: string;
+            name: string;
+            owners: Array<{ emailAddress: string; displayName: string }>;
+          }) => {
+            const metadata = await getSpreadsheetMetadata(file.id, accessToken);
+            return {
+              ...file,
+              sheetIds: metadata.sheetMap,
+            };
+          },
+        ),
+      );
+
       return {
-        folderId: currentFolderId,
         budgets: budgetsWithMetadata,
+        folderId: currentFolderId,
       };
     },
 

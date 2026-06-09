@@ -8,13 +8,15 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { IconShare, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useDeleteBudget } from "../../hooks/useDeleteBudget";
 import { LoadingState } from "../LoadingState";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import type { BudgetFile } from "../../lib/types/budgetFile";
+import { useShareBudget } from "../../hooks/useShareBudget";
+import { isValidEmail } from "../../lib/utils";
 
 interface BudgetItemProps {
   budgetFile: BudgetFile;
@@ -22,12 +24,26 @@ interface BudgetItemProps {
 
 export function BudgetItem({ budgetFile }: BudgetItemProps) {
   const [isSelectedForDelete, setIsSelectedForDelete] = useState(false);
-  const [deleteInput, setDeleteInput] = useState<string>("");
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isSelectedForSharing, setIsSelectedForSharing] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
+  const [isLoading, setIsloading] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
+
   const navigate = useNavigate();
   const { t, tRich } = useLanguage("BudgetItem");
 
   const deleteBudget = useDeleteBudget();
+  const shareBuget = useShareBudget();
+
+  const handleSelectForDelete = () => {
+    setIsSelectedForSharing(false);
+    setIsSelectedForDelete(true);
+  };
+
+  const handleSelectForSharing = () => {
+    setIsSelectedForDelete(false);
+    setIsSelectedForSharing(true);
+  };
 
   return (
     <Stack>
@@ -51,13 +67,21 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
           key={`${budgetFile.id}-delete`}
           variant="filled"
           size="xl"
-          onClick={() => setIsSelectedForDelete(true)}
+          onClick={handleSelectForDelete}
         >
           <IconTrash />
         </Button>
+        <Button
+          key={`${budgetFile.id}-share`}
+          variant="filled"
+          size="xl"
+          onClick={handleSelectForSharing}
+        >
+          <IconShare />
+        </Button>
       </Group>
       <Collapse expanded={isSelectedForDelete}>
-        {isDeleting ? (
+        {isLoading ? (
           <LoadingState />
         ) : (
           <Paper
@@ -84,9 +108,9 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
                 onChange={(e) => setDeleteInput(e.currentTarget.value)}
                 onKeyDown={async (e) => {
                   if (e.key === "Enter" && deleteInput === budgetFile.name) {
-                    setIsDeleting(true);
+                    setIsloading(true);
                     await deleteBudget.mutateAsync(budgetFile.id);
-                    setIsDeleting(false);
+                    setIsloading(false);
                   }
                 }}
               />
@@ -94,12 +118,62 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
                 color="red"
                 disabled={deleteInput !== budgetFile.name}
                 onClick={async () => {
-                  setIsDeleting(true);
+                  setIsloading(true);
                   await deleteBudget.mutateAsync(budgetFile.id);
-                  setIsDeleting(false);
+                  setIsloading(false);
                 }}
               >
                 {t("DeleteForever")}
+              </Button>
+            </Group>
+          </Paper>
+        )}
+      </Collapse>
+      <Collapse expanded={isSelectedForSharing}>
+        {isLoading ? (
+          <LoadingState />
+        ) : (
+          <Paper withBorder p="md" radius="md">
+            <Group justify="space-between" align="center">
+              <Text size="sm" mb="sm" fw={500}>
+                {t("EnterEmail")}
+              </Text>
+              <CloseButton
+                mb="sm"
+                onClick={() => setIsSelectedForSharing(false)}
+              />
+            </Group>
+
+            <Group align="flex-start">
+              <TextInput
+                style={{ flex: 1 }}
+                placeholder={t("Email")}
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.currentTarget.value)}
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter" && isValidEmail(emailInput)) {
+                    setIsloading(true);
+                    await shareBuget({
+                      spreadSheetId: budgetFile.id,
+                      email: emailInput,
+                    });
+                    setIsloading(false);
+                  }
+                }}
+              />
+              <Button
+                color="emerald"
+                disabled={!isValidEmail(emailInput)}
+                onClick={async () => {
+                  setIsloading(true);
+                  await shareBuget({
+                    spreadSheetId: budgetFile.id,
+                    email: emailInput,
+                  });
+                  setIsloading(false);
+                }}
+              >
+                {t("Share")}
               </Button>
             </Group>
           </Paper>

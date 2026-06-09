@@ -216,3 +216,33 @@ export async function getSpreadsheetMetadata(
 
   return { title, sheetMap };
 }
+
+export async function shareBudgetFile(
+  shareData: {
+    spreadSheetId: string;
+    email: string;
+  },
+  accessToken: string,
+) {
+  const url = `https://www.googleapis.com/drive/v3/files/${shareData.spreadSheetId}/permissions?sendNotificationEmail=true`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      role: "writer",
+      type: "user",
+      emailAddress: shareData.email,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || "Failed to share budget");
+  }
+
+  return response.json();
+}
