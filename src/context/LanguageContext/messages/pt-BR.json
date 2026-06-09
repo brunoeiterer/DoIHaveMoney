@@ -18,9 +18,7 @@
   "BudgetItem": {
     "ConfirmDeletionInput": "Para confirmar, digite <strong>{name}</strong> abaixo:",
     "DeleteForever": "Deletar Para Sempre",
-    "Email": "Email",
-    "EnterEmail": "Digite o email",
-    "Share": "Compartilhar"
+    "EnterEmail": "Digite o email"
   },
 
   "Budgets": {
@@ -74,6 +72,7 @@
   },
 
   "MembersManager": {
+    "Email": "Email",
     "LeaveBudget": "Sair",
     "Members": "Membros",
     "NoMembersFound": "Nenhum membro encontrado.",
@@ -81,6 +80,7 @@
     "User": "Usuário",
     "RemoveMember": "Remover",
     "Role": "Função",
+    "Share": "Compartilhar",
     "writer": "Membro",
     "You": "Você"
   },

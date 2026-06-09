@@ -15,8 +15,6 @@ import { useDeleteBudget } from "../../hooks/useDeleteBudget";
 import { LoadingState } from "../LoadingState";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import type { BudgetFile } from "../../lib/types/budgetFile";
-import { useShareBudget } from "../../hooks/useShareBudget";
-import { isValidEmail } from "../../lib/utils";
 import { MembersManager } from "./MembersManager";
 import { useAuth } from "../../context/AuthContext/AuthContext";
 
@@ -30,13 +28,11 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
   const [isMembersSelected, setIsMembersSelected] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
   const [isLoading, setIsloading] = useState(false);
-  const [emailInput, setEmailInput] = useState("");
 
   const navigate = useNavigate();
   const { t, tRich } = useLanguage("BudgetItem");
 
   const deleteBudget = useDeleteBudget();
-  const shareBuget = useShareBudget();
 
   const { email } = useAuth();
 
@@ -44,12 +40,6 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
     setIsSelectedForSharing(false);
     setIsMembersSelected(false);
     setIsSelectedForDelete(!isSelectedForDelete);
-  };
-
-  const handleSelectForSharing = () => {
-    setIsSelectedForDelete(false);
-    setIsMembersSelected(false);
-    setIsSelectedForSharing(!isSelectedForSharing);
   };
 
   const handleSelectMembers = () => {
@@ -83,14 +73,6 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
           onClick={handleSelectForDelete}
         >
           <IconTrash />
-        </Button>
-        <Button
-          key={`${budgetFile.id}-share`}
-          variant="filled"
-          size="xl"
-          onClick={handleSelectForSharing}
-        >
-          <IconShare />
         </Button>
         <Button
           key={`${budgetFile.id}-members`}
@@ -150,64 +132,20 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
           </Paper>
         )}
       </Collapse>
-      <Collapse expanded={isSelectedForSharing}>
+      <Collapse expanded={isMembersSelected}>
         {isLoading ? (
           <LoadingState />
         ) : (
-          <Paper withBorder p="md" radius="md">
-            <Group justify="space-between" align="center">
-              <Text size="sm" mb="sm" fw={500}>
-                {t("EnterEmail")}
-              </Text>
-              <CloseButton
-                mb="sm"
-                onClick={() => setIsSelectedForSharing(false)}
-              />
-            </Group>
-
-            <Group align="flex-start">
-              <TextInput
-                style={{ flex: 1 }}
-                placeholder={t("Email")}
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.currentTarget.value)}
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter" && isValidEmail(emailInput)) {
-                    setIsloading(true);
-                    await shareBuget({
-                      spreadSheetId: budgetFile.id,
-                      email: emailInput,
-                    });
-                    setIsloading(false);
-                  }
-                }}
-              />
-              <Button
-                color="emerald"
-                disabled={!isValidEmail(emailInput)}
-                onClick={async () => {
-                  setIsloading(true);
-                  await shareBuget({
-                    spreadSheetId: budgetFile.id,
-                    email: emailInput,
-                  });
-                  setIsloading(false);
-                }}
-              >
-                {t("Share")}
-              </Button>
-            </Group>
-          </Paper>
+          <MembersManager
+            permissions={budgetFile.permissions}
+            currentUserEmail={email}
+            isOwner={false}
+            budgetId={budgetFile.id}
+            onRemoveMember={async (permissionId) => {}}
+            onClose={() => setIsMembersSelected(false)}
+            setIsloading={setIsloading}
+          />
         )}
-      </Collapse>
-      <Collapse expanded={isMembersSelected}>
-        <MembersManager
-          permissions={budgetFile.permissions}
-          currentUserEmail={email}
-          isOwner={false}
-          onRemoveMember={async (permissionId) => {}}
-          onClose={() => setIsMembersSelected(false)}
-        />
       </Collapse>
     </Stack>
   );

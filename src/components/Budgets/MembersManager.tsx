@@ -9,27 +9,38 @@ import {
   ScrollArea,
   Badge,
   CloseButton,
+  TextInput,
+  Button,
 } from "@mantine/core";
 import { IconTrash, IconLogout } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
+import { isValidEmail } from "../../lib/utils";
+import { useShareBudget } from "../../hooks/useShareBudget";
 
 interface MembersManagerProps {
   permissions: { role: string; emailAddress: string }[];
   currentUserEmail: string;
   isOwner: boolean;
+  budgetId: string;
   onRemoveMember: (permissionId: string) => Promise<void>;
   onClose: () => void;
+  setIsloading: (isLoading: boolean) => void;
 }
 
 export function MembersManager({
   permissions,
   currentUserEmail,
   isOwner,
+  budgetId,
   onRemoveMember,
   onClose,
+  setIsloading,
 }: MembersManagerProps) {
   const { t } = useLanguage("MembersManager");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
+
+  const shareBuget = useShareBudget();
 
   const handleRemove = async (permissionId: string) => {
     setIsSubmitting(true);
@@ -45,6 +56,39 @@ export function MembersManager({
       <Group justify="space-between" mb="md">
         <Title order={4}>{t("Members")}</Title>
         <CloseButton mb="sm" onClick={() => onClose()} />
+      </Group>
+
+      <Group align="flex-start" mb={"sm"}>
+        <TextInput
+          style={{ flex: 1 }}
+          placeholder={t("Email")}
+          value={emailInput}
+          onChange={(e) => setEmailInput(e.currentTarget.value)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter" && isValidEmail(emailInput)) {
+              setIsloading(true);
+              await shareBuget({
+                spreadSheetId: budgetId,
+                email: emailInput,
+              });
+              setIsloading(false);
+            }
+          }}
+        />
+        <Button
+          color="emerald"
+          disabled={!isValidEmail(emailInput)}
+          onClick={async () => {
+            setIsloading(true);
+            await shareBuget({
+              spreadSheetId: budgetId,
+              email: emailInput,
+            });
+            setIsloading(false);
+          }}
+        >
+          {t("Share")}
+        </Button>
       </Group>
 
       <ScrollArea h={300}>
