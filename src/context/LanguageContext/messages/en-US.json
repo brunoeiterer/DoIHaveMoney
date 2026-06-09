@@ -12,7 +12,9 @@
 
   "Budget": {
     "BackToBudgets": "Back to Budgets",
-    "Budget": "Budget"
+    "Budget": "Budget",
+    "Expenses": "Gastos",
+    "RecurringExpenses": "Gastos Recorrentes"
   },
 
   "BudgetItem": {
@@ -54,6 +56,7 @@
     "Description": "Description",
     "ExpensePlaceholder": "Expense",
     "Expenses": "Expenses",
+    "NoExpenses": "No expenses.",
     "NoExpensesThisMonth": "No expenses this month.",
     "SelectCategory": "Select Category..."
   },

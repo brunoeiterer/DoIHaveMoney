@@ -12,19 +12,24 @@ import type { Expense } from "../../lib/types/expense";
 
 interface MonthlyTotalsProps {
   expenses: Expense[];
+  recurringExpenses: Expense[];
   currentMonth: string;
 }
 
-export function MonthlyTotals({ expenses, currentMonth }: MonthlyTotalsProps) {
+export function MonthlyTotals({
+  expenses,
+  recurringExpenses,
+  currentMonth,
+}: MonthlyTotalsProps) {
   const { t } = useLanguage("MonthlyTotals");
 
-  const currentMonthExpenses = expenses.filter((expense) =>
-    expense.date.startsWith(currentMonth),
-  );
+  const currentMonthExpenses = expenses
+    .filter((expense) => expense.date?.startsWith(currentMonth))
+    .concat(recurringExpenses);
 
   const activeCategories = Array.from(
     new Set(currentMonthExpenses.map((e) => e.category)),
-  ).sort();
+  );
 
   const groupedExpenses: Record<string, Expense[]> = {};
   const categoryTotals: Record<string, number> = {};
@@ -35,8 +40,12 @@ export function MonthlyTotals({ expenses, currentMonth }: MonthlyTotalsProps) {
       (e) => e.category === category,
     );
 
-    groupedExpenses[category] = categoryItems.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    groupedExpenses[category] = categoryItems.sort((a, b) =>
+      !a.date
+        ? 1
+        : !b.date
+          ? -1
+          : new Date(a.date).getTime() - new Date(b.date).getTime(),
     );
 
     const total = categoryItems.reduce((sum, item) => sum + item.amount, 0);
@@ -123,9 +132,11 @@ export function MonthlyTotals({ expenses, currentMonth }: MonthlyTotalsProps) {
                               ${expense.amount.toFixed(2)}
                             </Text>
                           </Group>
-                          <Text size="xs" c="dimmed">
-                            {t("Day")} {expense.date.split("-")[2]}
-                          </Text>
+                          {expense.date && (
+                            <Text size="xs" c="dimmed">
+                              {t("Day")} {expense.date.split("-")[2]}
+                            </Text>
+                          )}
                         </div>
                       ) : null}{" "}
                     </Table.Td>

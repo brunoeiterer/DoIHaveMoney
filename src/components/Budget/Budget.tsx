@@ -1,4 +1,3 @@
-// src/pages/Budget.tsx
 import { useState } from "react";
 import {
   Container,
@@ -38,11 +37,14 @@ export function Budget() {
     budgetName,
     expenses,
     categories,
+    recurringExpenses,
     isLoading,
     addExpense,
     deleteExpense,
     addCategory,
     deleteCategory,
+    addRecurringExpense,
+    deleteRecurringExpense,
   } = useBudget(id);
 
   if (isLoading) {
@@ -88,7 +90,7 @@ export function Budget() {
         <Title order={2}>{budgetName}</Title>
       </Center>
 
-      <Grid>
+      <Grid mb="sm">
         <Grid.Col span={{ base: 12, md: 4 }}>
           <CategoriesManager
             categories={categories}
@@ -99,13 +101,24 @@ export function Budget() {
 
         <Grid.Col span={{ base: 12, md: 8 }}>
           <ExpensesManager
-            expenses={expenses}
+            expenses={recurringExpenses}
             categories={categories}
-            onAddExpense={addExpense}
-            onDeleteExpense={deleteExpense}
+            onAddExpense={addRecurringExpense}
+            onDeleteExpense={deleteRecurringExpense}
+            title={t("RecurringExpenses")}
+            hasDate={false}
           />
         </Grid.Col>
       </Grid>
+
+      <ExpensesManager
+        expenses={expenses}
+        categories={categories}
+        onAddExpense={addExpense}
+        onDeleteExpense={deleteExpense}
+        title={t("Expenses")}
+        hasDate={true}
+      />
 
       <Paper withBorder radius="md" mb="xl" mt="xl">
         <Group justify="space-between">
@@ -121,7 +134,11 @@ export function Budget() {
         </Group>
       </Paper>
 
-      <MonthlyTotals expenses={expenses} currentMonth={currentMonth} />
+      <MonthlyTotals
+        recurringExpenses={recurringExpenses}
+        expenses={expenses}
+        currentMonth={currentMonth}
+      />
     </Container>
   );
 }

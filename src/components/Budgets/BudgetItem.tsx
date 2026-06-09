@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconShare, IconTrash, IconUsersGroup } from "@tabler/icons-react";
+import { IconTrash, IconUsersGroup } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useDeleteBudget } from "../../hooks/useDeleteBudget";

@@ -44,6 +44,11 @@ export async function createBudgetSpreadsheet(
               properties: { title: "Categories" },
             },
           },
+          {
+            addSheet: {
+              properties: { title: "RecurringData" },
+            },
+          },
         ],
       }),
     },
@@ -79,6 +84,7 @@ export async function fetchBudgetData(spreadsheetId: string, token: string) {
   );
   url.searchParams.append("ranges", "Data");
   url.searchParams.append("ranges", "Categories");
+  url.searchParams.append("ranges", "RecurringData");
 
   const res = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${token}` },
@@ -90,6 +96,7 @@ export async function fetchBudgetData(spreadsheetId: string, token: string) {
 
   const dataSheetValues = data.valueRanges[0].values || [];
   const categoriesSheetValues = data.valueRanges[1].values || [];
+  const recurringDataSheetValues = data.valueRanges[2].values || [];
 
   const expenses: Expense[] = dataSheetValues.map(
     (row: any[], index: number) => ({
@@ -112,9 +119,20 @@ export async function fetchBudgetData(spreadsheetId: string, token: string) {
 
   categories.reverse();
 
+  const recurringExpenses: Expense[] = recurringDataSheetValues.map(
+    (row: any[], index: number) => ({
+      id: index,
+      description: row[0] || "",
+      category: row[1] || "",
+      amount: parseFloat(row[2] || "0"),
+    }),
+  );
+
+  recurringExpenses.reverse();
+
   const metadata = await getSpreadsheetMetadata(spreadsheetId, token);
 
-  return { metadata, expenses, categories };
+  return { metadata, expenses, categories, recurringExpenses };
 }
 
 export async function addExpenseToSheet(
@@ -133,6 +151,37 @@ export async function addExpenseToSheet(
       body: JSON.stringify({
         values: [
           [expense.date, expense.description, expense.category, expense.amount],
+        ],
+      }),
+    },
+  );
+  if (!res.ok) throw new Error("Failed to add expense");
+  return res.json();
+}
+
+export async function addRecurringExpenseToSheet(
+  spreadsheetId: string,
+  expense: any,
+  token: string,
+) {
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/RecurringData!A:C:append?valueInputOption=USER_ENTERED`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        values: [
+          expense.date
+            ? [
+                expense.date,
+                expense.description,
+                expense.category,
+                expense.amount,
+              ]
+            : [expense.description, expense.category, expense.amount],
         ],
       }),
     },
