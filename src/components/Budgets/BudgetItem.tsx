@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconShare, IconTrash } from "@tabler/icons-react";
+import { IconShare, IconTrash, IconUsersGroup } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useDeleteBudget } from "../../hooks/useDeleteBudget";
@@ -17,6 +17,8 @@ import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import type { BudgetFile } from "../../lib/types/budgetFile";
 import { useShareBudget } from "../../hooks/useShareBudget";
 import { isValidEmail } from "../../lib/utils";
+import { MembersManager } from "./MembersManager";
+import { useAuth } from "../../context/AuthContext/AuthContext";
 
 interface BudgetItemProps {
   budgetFile: BudgetFile;
@@ -25,6 +27,7 @@ interface BudgetItemProps {
 export function BudgetItem({ budgetFile }: BudgetItemProps) {
   const [isSelectedForDelete, setIsSelectedForDelete] = useState(false);
   const [isSelectedForSharing, setIsSelectedForSharing] = useState(false);
+  const [isMembersSelected, setIsMembersSelected] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const [emailInput, setEmailInput] = useState("");
@@ -35,14 +38,24 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
   const deleteBudget = useDeleteBudget();
   const shareBuget = useShareBudget();
 
+  const { email } = useAuth();
+
   const handleSelectForDelete = () => {
     setIsSelectedForSharing(false);
-    setIsSelectedForDelete(true);
+    setIsMembersSelected(false);
+    setIsSelectedForDelete(!isSelectedForDelete);
   };
 
   const handleSelectForSharing = () => {
     setIsSelectedForDelete(false);
-    setIsSelectedForSharing(true);
+    setIsMembersSelected(false);
+    setIsSelectedForSharing(!isSelectedForSharing);
+  };
+
+  const handleSelectMembers = () => {
+    setIsSelectedForSharing(false);
+    setIsSelectedForDelete(false);
+    setIsMembersSelected(!isMembersSelected);
   };
 
   return (
@@ -78,6 +91,14 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
           onClick={handleSelectForSharing}
         >
           <IconShare />
+        </Button>
+        <Button
+          key={`${budgetFile.id}-members`}
+          variant="filled"
+          size="xl"
+          onClick={handleSelectMembers}
+        >
+          <IconUsersGroup />
         </Button>
       </Group>
       <Collapse expanded={isSelectedForDelete}>
@@ -178,6 +199,15 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
             </Group>
           </Paper>
         )}
+      </Collapse>
+      <Collapse expanded={isMembersSelected}>
+        <MembersManager
+          permissions={budgetFile.permissions}
+          currentUserEmail={email}
+          isOwner={false}
+          onRemoveMember={async (permissionId) => {}}
+          onClose={() => setIsMembersSelected(false)}
+        />
       </Collapse>
     </Stack>
   );

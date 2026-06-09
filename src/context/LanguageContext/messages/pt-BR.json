@@ -73,6 +73,18 @@
     "Slogan": "Saiba exatamente para onde está indo seu dinheiro."
   },
 
+  "MembersManager": {
+    "LeaveBudget": "Sair",
+    "Members": "Membros",
+    "NoMembersFound": "Nenhum membro encontrado.",
+    "owner": "Dono",
+    "User": "Usuário",
+    "RemoveMember": "Remover",
+    "Role": "Função",
+    "writer": "Membro",
+    "You": "Você"
+  },
+
   "MonthlyTotals": {
     "Day": "Dia",
     "MonthlyTotals": "Totais do Mês",

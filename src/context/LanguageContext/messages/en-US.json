@@ -73,6 +73,15 @@
     "Slogan": "Know exactly where your money is going."
   },
 
+  "MembersManager": {
+    "LeaveBudget": "Leave",
+    "Members": "Members",
+    "NoMembersFound": "No members found.",
+    "User": "User",
+    "RemoveMember": "Remove",
+    "Role": "Role"
+  },
+
   "MonthlyTotals": {
     "Day": "Day",
     "MonthlyTotals": "Monthly Totals",

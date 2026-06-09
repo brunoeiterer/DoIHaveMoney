@@ -12,7 +12,7 @@ interface DriveFile {
   id: string;
   name: string;
   parents?: string[];
-  owners: Array<{ emailAddress: string; displayName: string }>;
+  permissions: { role: string; emailAddress: string }[];
 }
 
 export function useBudgets() {
@@ -65,7 +65,8 @@ export function useBudgets() {
 
       const query =
         "trashed = false and mimeType = 'application/vnd.google-apps.spreadsheet'";
-      const fields = "files(id, name, parents, owners)";
+      const fields =
+        "files(id, name, parents, permissions(role, emailAddress))";
       const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=${encodeURIComponent(fields)}`;
 
       const response = await fetch(url, {
@@ -96,7 +97,7 @@ export function useBudgets() {
           async (file: {
             id: string;
             name: string;
-            owners: Array<{ emailAddress: string; displayName: string }>;
+            permissions: { role: string; emailAddress: string }[];
           }) => {
             const metadata = await getSpreadsheetMetadata(file.id, accessToken);
             return {
