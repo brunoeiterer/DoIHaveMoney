@@ -24,7 +24,6 @@ interface BudgetItemProps {
 
 export function BudgetItem({ budgetFile }: BudgetItemProps) {
   const [isSelectedForDelete, setIsSelectedForDelete] = useState(false);
-  const [isSelectedForSharing, setIsSelectedForSharing] = useState(false);
   const [isMembersSelected, setIsMembersSelected] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
   const [isLoading, setIsloading] = useState(false);
@@ -34,16 +33,14 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
 
   const deleteBudget = useDeleteBudget();
 
-  const { email } = useAuth();
+  const { user } = useAuth();
 
   const handleSelectForDelete = () => {
-    setIsSelectedForSharing(false);
     setIsMembersSelected(false);
     setIsSelectedForDelete(!isSelectedForDelete);
   };
 
   const handleSelectMembers = () => {
-    setIsSelectedForSharing(false);
     setIsSelectedForDelete(false);
     setIsMembersSelected(!isMembersSelected);
   };
@@ -138,7 +135,7 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
         ) : (
           <MembersManager
             permissions={budgetFile.permissions}
-            currentUserEmail={email}
+            currentUserEmail={user?.email ?? ""}
             isOwner={false}
             budgetId={budgetFile.id}
             onRemoveMember={async (permissionId) => {}}

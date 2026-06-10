@@ -54,7 +54,6 @@ export function CategoriesManager({
   const handleDelete = async (id: number) => {
     setIsSubmitting(true);
     try {
-      console.log("deleting");
       await onDeleteCategory(id);
     } finally {
       setIsSubmitting(false);

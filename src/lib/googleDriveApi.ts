@@ -1,11 +1,22 @@
+import { getAccessToken } from "../context/AuthContext/AuthGlobal";
 import type { Category } from "./types/category";
 import type { Expense } from "./types/expense";
+
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
 
 export async function createBudgetSpreadsheet(
   budgetName: string,
   folderId: string,
-  accessToken: string,
 ) {
+  const accessToken = getAccessToken();
+
   const driveRes = await fetch("https://www.googleapis.com/drive/v3/files", {
     method: "POST",
     headers: {
@@ -19,7 +30,9 @@ export async function createBudgetSpreadsheet(
     }),
   });
 
-  if (!driveRes.ok) throw new Error("Failed to create file in Drive");
+  if (!driveRes.ok)
+    throw new ApiError("Failed to create file in Drive", driveRes.status);
+
   const file = await driveRes.json();
   const spreadsheetId = file.id;
 
@@ -54,31 +67,35 @@ export async function createBudgetSpreadsheet(
     },
   );
 
-  if (!sheetsRes.ok) throw new Error("Failed to format spreadsheet");
+  if (!sheetsRes.ok)
+    throw new ApiError("Failed to format spreadsheet", sheetsRes.status);
 
   return spreadsheetId;
 }
 
 export async function deleteBudgetSpreadsheet(
   spreadsheetId: string,
-  token: string,
 ): Promise<void> {
+  const accessToken = getAccessToken();
+
   const res = await fetch(
     `https://www.googleapis.com/drive/v3/files/${spreadsheetId}`,
     {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     },
   );
 
   if (!res.ok) {
-    throw new Error(`Failed to delete spreadsheet: ${res.statusText}`);
+    throw new ApiError("Failed to delete spreadsheet", res.status);
   }
 }
 
-export async function fetchBudgetData(spreadsheetId: string, token: string) {
+export async function fetchBudgetData(spreadsheetId: string) {
+  const accessToken = getAccessToken();
+
   const url = new URL(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchGet`,
   );
@@ -87,10 +104,10 @@ export async function fetchBudgetData(spreadsheetId: string, token: string) {
   url.searchParams.append("ranges", "RecurringData");
 
   const res = await fetch(url.toString(), {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
 
-  if (!res.ok) throw new Error("Failed to fetch budget data");
+  if (!res.ok) throw new ApiError("Failed to fetch budget data", res.status);
 
   const data = await res.json();
 
@@ -130,22 +147,20 @@ export async function fetchBudgetData(spreadsheetId: string, token: string) {
 
   recurringExpenses.reverse();
 
-  const metadata = await getSpreadsheetMetadata(spreadsheetId, token);
+  const metadata = await getSpreadsheetMetadata(spreadsheetId);
 
   return { metadata, expenses, categories, recurringExpenses };
 }
 
-export async function addExpenseToSheet(
-  spreadsheetId: string,
-  expense: any,
-  token: string,
-) {
+export async function addExpenseToSheet(spreadsheetId: string, expense: any) {
+  const accessToken = getAccessToken();
+
   const res = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Data!A:C:append?valueInputOption=USER_ENTERED`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -155,21 +170,22 @@ export async function addExpenseToSheet(
       }),
     },
   );
-  if (!res.ok) throw new Error("Failed to add expense");
+  if (!res.ok) throw new ApiError("Failed to add expense", res.status);
   return res.json();
 }
 
 export async function addRecurringExpenseToSheet(
   spreadsheetId: string,
   expense: any,
-  token: string,
 ) {
+  const accessToken = getAccessToken();
+
   const res = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/RecurringData!A:C:append?valueInputOption=USER_ENTERED`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -186,40 +202,41 @@ export async function addRecurringExpenseToSheet(
       }),
     },
   );
-  if (!res.ok) throw new Error("Failed to add expense");
+  if (!res.ok) throw new ApiError("Failed to add expense", res.status);
   return res.json();
 }
 
-export async function addCategoryToSheet(
-  spreadsheetId: string,
-  name: string,
-  token: string,
-) {
-  return fetch(
+export async function addCategoryToSheet(spreadsheetId: string, name: string) {
+  const accessToken = getAccessToken();
+
+  const res = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Categories!A:A:append?valueInputOption=USER_ENTERED`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ values: [[name]] }),
     },
   );
+
+  if (!res.ok) throw new ApiError("Failed to add category", res.status);
 }
 
 export async function deleteSheetRow(
   spreadsheetId: string,
   sheetId: number,
   rowIndex: number,
-  token: string,
 ) {
-  return fetch(
+  const accessToken = getAccessToken();
+
+  const res = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -238,16 +255,20 @@ export async function deleteSheetRow(
       }),
     },
   );
+
+  if (!res.ok) throw new ApiError("Failed to delete row", res.status);
 }
 
-export async function getSpreadsheetMetadata(
-  spreadsheetId: string,
-  token: string,
-) {
+export async function getSpreadsheetMetadata(spreadsheetId: string) {
+  const accessToken = getAccessToken();
+
   let url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties(sheetId,title)`;
   let res = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
+
+  if (!res.ok) throw new ApiError("Failed to get metadata", res.status);
+
   let data = await res.json();
 
   const sheetMap: Record<string, number> = {};
@@ -257,8 +278,11 @@ export async function getSpreadsheetMetadata(
 
   url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=properties.title`;
   res = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
+
+  if (!res.ok) throw new ApiError("Failed to get metadata", res.status);
+
   data = await res.json();
 
   const title = data.properties.title as string;
@@ -288,10 +312,8 @@ export async function shareBudgetFile(
     }),
   });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error?.message || "Failed to share budget");
-  }
+  if (!response.ok)
+    throw new ApiError("Failed to share budget", response.status);
 
   return response.json();
 }

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthContext/AuthContext";
 import type { BudgetFile } from "../lib/types/budgetFile";
-import { getSpreadsheetMetadata } from "../lib/googleDriveApi";
+import { ApiError, getSpreadsheetMetadata } from "../lib/googleDriveApi";
+import { getAccessToken } from "../context/AuthContext/AuthGlobal";
 
 interface FetchBudgetsResponse {
   folderId: string;
@@ -16,7 +16,7 @@ interface DriveFile {
 }
 
 export function useBudgets() {
-  const { accessToken } = useAuth();
+  const accessToken = getAccessToken();
 
   const { data, isFetching, error } = useQuery<FetchBudgetsResponse, Error>({
     queryKey: ["budgets", accessToken],
@@ -34,7 +34,10 @@ export function useBudgets() {
       );
 
       if (!folderRes.ok)
-        throw new Error("Failed to check Drive folder existence");
+        throw new ApiError(
+          "Failed to check Drive folder existence",
+          folderRes.status,
+        );
       const folderData = await folderRes.json();
 
       let currentFolderId: string;
@@ -56,7 +59,10 @@ export function useBudgets() {
         );
 
         if (!createRes.ok)
-          throw new Error("Failed to create app folder in Google Drive");
+          throw new ApiError(
+            "Failed to create app folder in Google Drive",
+            createRes.status,
+          );
         const createData = await createRes.json();
         currentFolderId = createData.id;
       } else {
@@ -72,6 +78,9 @@ export function useBudgets() {
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
+
+      if (!response.ok)
+        throw new ApiError("Failed to get spreadsheet data", response.status);
 
       const data = await response.json();
       const allFiles: DriveFile[] = data.files || [];
@@ -99,7 +108,7 @@ export function useBudgets() {
             name: string;
             permissions: { role: string; emailAddress: string }[];
           }) => {
-            const metadata = await getSpreadsheetMetadata(file.id, accessToken);
+            const metadata = await getSpreadsheetMetadata(file.id);
             return {
               ...file,
               sheetIds: metadata.sheetMap,

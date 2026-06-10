@@ -17,12 +17,39 @@ import { Budgets } from "./components/Budgets/Budgets.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Budget } from "./components/Budget/Budget.tsx";
+import { ApiError } from "./lib/googleDriveApi.ts";
+import { setAuthSession } from "./context/AuthContext/AuthGlobal.ts";
+
+const refresh = async () => {
+  try {
+    const res = await fetch("/api/auth-refresh", { method: "POST" });
+    if (!res.ok) throw new Error("Refresh token expired");
+
+    const data = await res.json();
+
+    setAuthSession(data.accessToken, data.user);
+
+    return true;
+  } catch (e) {
+    setAuthSession(null, null);
+    return false;
+  }
+};
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5,
       gcTime: 1000 * 60 * 10,
+      retry: (failureCount, error) => {
+        if (error instanceof ApiError && error.status === 401) {
+          refresh()
+            .then(() => true)
+            .catch(() => false);
+        }
+
+        return failureCount < 3;
+      },
     },
   },
 });

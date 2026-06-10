@@ -22,7 +22,7 @@ export function Budgets() {
   const { t } = useLanguage("Budgets");
 
   const { budgets, isFetching, error, folderId } = useBudgets();
-  const createBudget = useCreateBudget(folderId);
+  const createBudget = useCreateBudget(folderId ?? "");
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateNewBudgetClose = () => {

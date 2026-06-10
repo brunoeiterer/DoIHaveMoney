@@ -17,17 +17,18 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import { LoadingState } from "./LoadingState";
 import { notifications } from "@mantine/notifications";
+import { setAuthSession } from "../context/AuthContext/AuthGlobal";
 
 export function Authorization() {
   const { t } = useLanguage("Authorization");
-  const { email, name, pictureLink, setAccessToken } = useAuth();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const googleLogin = useGoogleLogin({
     flow: "auth-code",
     scope: "https://www.googleapis.com/auth/drive.file",
-    hint: email,
+    hint: user?.email,
     onSuccess: async (codeResponse) => {
       try {
         const response = await fetch("/api/auth-exchange", {
@@ -37,16 +38,12 @@ export function Authorization() {
           },
           body: JSON.stringify({
             code: codeResponse.code,
-            userProfile: {
-              email,
-              name,
-              pictureLink,
-            },
+            userProfile: user,
           }),
         });
 
         const data = await response.json();
-        setAccessToken(data.accessToken);
+        setAuthSession(data.accessToken, data.userProfile);
 
         navigate("/budgets");
       } catch {

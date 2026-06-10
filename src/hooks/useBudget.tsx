@@ -9,20 +9,22 @@ import {
 } from "../lib/googleDriveApi";
 import { useState } from "react";
 import type { Expense } from "../lib/types/expense";
+import { getAccessToken } from "../context/AuthContext/AuthGlobal";
 
 export function useBudget(spreadsheetId: string | undefined) {
-  const { accessToken } = useAuth();
   const queryClient = useQueryClient();
 
   const [dataSheetId, setDataSheetId] = useState<number>();
   const [categoriesSheetId, setCategoriesSheetId] = useState<number>();
   const [recurringDataSheetId, setRecurringDataSheetId] = useState<number>();
 
+  const accessToken = getAccessToken();
+
   const query = useQuery({
     queryKey: ["budget", spreadsheetId],
     queryFn: async () => {
       if (!accessToken || !spreadsheetId) throw new Error("Missing auth or ID");
-      const data = await fetchBudgetData(spreadsheetId, accessToken);
+      const data = await fetchBudgetData(spreadsheetId);
 
       setDataSheetId(data.metadata.sheetMap["Data"]);
       setCategoriesSheetId(data.metadata.sheetMap["Categories"]);
@@ -36,7 +38,7 @@ export function useBudget(spreadsheetId: string | undefined) {
   const addExpense = useMutation({
     mutationFn: async (expense: Expense) => {
       if (!accessToken || !spreadsheetId) throw new Error("Missing auth or ID");
-      await addExpenseToSheet(spreadsheetId, expense, accessToken);
+      await addExpenseToSheet(spreadsheetId, expense);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] });
@@ -45,7 +47,7 @@ export function useBudget(spreadsheetId: string | undefined) {
 
   const addCategory = useMutation({
     mutationFn: async (name: string) => {
-      await addCategoryToSheet(spreadsheetId!, name, accessToken!);
+      await addCategoryToSheet(spreadsheetId!, name!);
     },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] }),
@@ -53,12 +55,7 @@ export function useBudget(spreadsheetId: string | undefined) {
 
   const deleteExpense = useMutation({
     mutationFn: async (rowIndex: number) => {
-      await deleteSheetRow(
-        spreadsheetId!,
-        dataSheetId!,
-        rowIndex,
-        accessToken!,
-      );
+      await deleteSheetRow(spreadsheetId!, dataSheetId!, rowIndex);
     },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] }),
@@ -66,12 +63,7 @@ export function useBudget(spreadsheetId: string | undefined) {
 
   const deleteCategory = useMutation({
     mutationFn: async (rowIndex: number) => {
-      await deleteSheetRow(
-        spreadsheetId!,
-        categoriesSheetId!,
-        rowIndex,
-        accessToken!,
-      );
+      await deleteSheetRow(spreadsheetId!, categoriesSheetId!, rowIndex);
     },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] }),
@@ -80,7 +72,7 @@ export function useBudget(spreadsheetId: string | undefined) {
   const addRecurringExpense = useMutation({
     mutationFn: async (expense: Expense) => {
       if (!accessToken || !spreadsheetId) throw new Error("Missing auth or ID");
-      await addRecurringExpenseToSheet(spreadsheetId, expense, accessToken);
+      await addRecurringExpenseToSheet(spreadsheetId, expense);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] });
@@ -89,12 +81,7 @@ export function useBudget(spreadsheetId: string | undefined) {
 
   const deleteRecurringExpense = useMutation({
     mutationFn: async (rowIndex: number) => {
-      await deleteSheetRow(
-        spreadsheetId!,
-        recurringDataSheetId!,
-        rowIndex,
-        accessToken!,
-      );
+      await deleteSheetRow(spreadsheetId!, recurringDataSheetId!, rowIndex);
     },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["budget", spreadsheetId] }),

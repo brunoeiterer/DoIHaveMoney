@@ -5,7 +5,7 @@ import { useLanguage } from "../context/LanguageContext/LanguageContext";
 import { useNavigate } from "react-router";
 
 export function TopBar() {
-  const { email, name, pictureLink, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const { t } = useLanguage("TopBar");
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ export function TopBar() {
       <Menu shadow="md" width={250}>
         <Menu.Target>
           <UnstyledButton>
-            <Avatar src={pictureLink} alt={name} radius="xl" />
+            <Avatar src={user?.pictureLink} alt={user?.name} radius="xl" />
           </UnstyledButton>
         </Menu.Target>
 
@@ -29,9 +29,9 @@ export function TopBar() {
           <Menu.Label>{t("Account")}</Menu.Label>
 
           <Menu.Item disabled>
-            <Text size="sm">{name}</Text>
+            <Text size="sm">{user?.name}</Text>
             <Text size="xs" c="dimmed">
-              {email}
+              {user?.email}
             </Text>
           </Menu.Item>
 

@@ -1,19 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthContext/AuthContext";
 import { createBudgetSpreadsheet } from "../lib/googleDriveApi";
+import { getAccessToken } from "../context/AuthContext/AuthGlobal";
 
-export function useCreateBudget(folderId: string | null) {
-  const { accessToken } = useAuth();
+export function useCreateBudget(folderId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (budgetName: string) => {
-      if (!accessToken || !folderId)
-        throw new Error("Missing credentials or folder ID");
-      return createBudgetSpreadsheet(budgetName, folderId, accessToken);
+      if (folderId) throw new Error("Missing folder ID");
+      return createBudgetSpreadsheet(budgetName, folderId);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["budgets", accessToken] });
+      queryClient.invalidateQueries({
+        queryKey: ["budgets", getAccessToken()],
+      });
     },
   });
 }

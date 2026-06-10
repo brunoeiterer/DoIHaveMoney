@@ -1,15 +1,17 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import type { User } from "../../lib/types/User";
+import {
+  setAuthSession,
+  setReactStateUpdater,
+  type AuthSession,
+} from "./AuthGlobal";
 
 interface AuthContextType {
-  email: string;
-  name: string;
-  pictureLink: string;
+  user: User | null;
   isSignedIn: boolean;
-  signIn: (email: string, name: string, pictureLink: string) => void;
+  signIn: (user: User) => void;
   signOut: () => void;
   isAuthenticating: boolean;
-  accessToken: string;
-  setAccessToken: (accessToken: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,26 +27,18 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [pictureLink, setPictureLink] = useState("");
+  const [user, setUser] = useState<User | null>(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
-  const [accessToken, setAccessToken] = useState("");
 
-  const signIn = (email: string, name: string, pictureLink: string) => {
-    setEmail(email);
-    setName(name);
-    setPictureLink(pictureLink);
-
+  const signIn = (user: User) => {
+    setUser(user);
     setIsSignedIn(true);
   };
 
   const signOut = async () => {
-    setEmail("");
-    setName("");
-    setPictureLink("");
-    setAccessToken("");
+    setUser(null);
+    setAuthSession(null, null);
 
     await fetch("/api/signout", { method: "POST" });
   };
@@ -55,19 +49,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const response = await fetch("/api/auth-refresh", { method: "POST" });
 
         if (response.ok) {
-          const { accessToken, user: recoveredUser } = await response.json();
+          const { accessToken, user: recoveredUser } =
+            (await response.json()) as AuthSession;
 
-          setAccessToken(accessToken);
+          setAuthSession(accessToken, recoveredUser);
 
           if (recoveredUser) {
-            setEmail(recoveredUser.email);
-            setName(recoveredUser.name);
-            setPictureLink(recoveredUser.pictureLink);
+            setUser(recoveredUser);
           }
         } else {
-          setEmail("");
-          setName("");
-          setPictureLink("");
+          setUser(null);
         }
       } catch {
       } finally {
@@ -75,21 +66,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
 
+    setReactStateUpdater((session: AuthSession) => {
+      setUser(session.user);
+    });
+
     checkAuthorization();
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        email,
-        name,
-        pictureLink,
+        user,
         isSignedIn,
         signIn,
         signOut,
         isAuthenticating,
-        accessToken,
-        setAccessToken,
       }}
     >
       {children}
