@@ -13,13 +13,22 @@ import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../context/AuthContext/AuthContext";
 import { notifications } from "@mantine/notifications";
 import type { GoogleJwt } from "../lib/types/googleJwt";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { FeatureItem } from "./FeatureItem";
+import { LoadingState } from "./LoadingState";
 
 export function Landing() {
   const { t } = useLanguage("Login");
-  const { signIn } = useAuth();
+  const { signIn, user, isAuthenticating } = useAuth();
   const navigate = useNavigate();
+
+  if (isAuthenticating) {
+    return <LoadingState fullScreen />;
+  }
+
+  if (user) {
+    return <Navigate to="/authorization" replace />;
+  }
 
   return (
     <Container size="sm">
