@@ -5,7 +5,7 @@ import sanitizeHtml from "sanitize-html";
 
 interface LanguageContextType {
   language: string;
-  setLanguage: (lang: string) => void;
+  changeLanguage: (lang: string) => void;
   translations: Record<string, Record<string, string>>;
 }
 
@@ -64,7 +64,7 @@ export const useLanguage = (page: string) => {
 
   return {
     language: context.language,
-    setLanguage: context.setLanguage,
+    changeLanguage: context.changeLanguage,
     t,
     tRich,
   };
@@ -73,8 +73,14 @@ export const useLanguage = (page: string) => {
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const localStorageLanguage = localStorage.getItem("language");
+
   const [language, setLanguage] = useState<string>(
-    supportedLanguages.has(navigator.language) ? navigator.language : "en-US",
+    localStorageLanguage
+      ? localStorageLanguage
+      : supportedLanguages.has(navigator.language)
+        ? navigator.language
+        : "en-US",
   );
   const [translations, setTranslations] =
     useState<Record<string, Record<string, string>>>(enTranslations);
@@ -84,12 +90,20 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     setTranslations(module.default);
   };
 
+  const changeLanguage = (language: string) => {
+    localStorage.setItem("language", language);
+
+    setLanguage(language);
+  };
+
   useEffect(() => {
     loadTranslations(language);
   }, [language]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, translations }}>
+    <LanguageContext.Provider
+      value={{ language, changeLanguage, translations }}
+    >
       {children}
     </LanguageContext.Provider>
   );
