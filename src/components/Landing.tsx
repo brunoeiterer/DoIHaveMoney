@@ -18,7 +18,7 @@ import { FeatureItem } from "./FeatureItem";
 import { LoadingState } from "./LoadingState";
 
 export function Landing() {
-  const { t } = useLanguage("Login");
+  const { t } = useLanguage("Landing");
   const { signIn, user, isAuthenticating } = useAuth();
   const navigate = useNavigate();
 
@@ -79,6 +79,9 @@ export function Landing() {
 
               <FeatureItem>{t("NoSubscriptions")}</FeatureItem>
             </Stack>
+
+            <Title order={2}>{t("HowItWorksTitle")}</Title>
+            <Text ta="center">{t("HowItWorks")}</Text>
           </Stack>
         </Paper>
       </Center>

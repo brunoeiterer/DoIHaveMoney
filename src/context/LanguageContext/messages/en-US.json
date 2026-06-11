@@ -13,8 +13,8 @@
   "Budget": {
     "BackToBudgets": "Back to Budgets",
     "Budget": "Budget",
-    "Expenses": "Gastos",
-    "RecurringExpenses": "Gastos Recorrentes"
+    "Expenses": "Expenses",
+    "RecurringExpenses": "Recurring Expenses"
   },
 
   "BudgetItem": {
@@ -36,7 +36,7 @@
   },
 
   "CategoriesManager": {
-    "Categories": "CaCategories",
+    "Categories": "Categories",
     "NewCategoryPlaceholder": "New Categories",
     "CategoryName": "Name",
     "NoCategoriesYet": "No categories configured yet."
@@ -61,19 +61,21 @@
     "SelectCategory": "Select Category..."
   },
 
-  "LoadingState": {
-    "Loading": "Loading..."
-  },
-
-  "Login": {
+  "Landing": {
     "BudgetTracker": "Budget Tracker",
     "GoogleSheetsStorage": "Google Sheets storage.",
     "Headline": "Simple budgeting powered by Google Sheets.",
+    "HowItWorks": "The app creates a folder called DoIHaveMoney in your Google Drive and stores one spreadsheet for each budget you create in it. It then reads and edits this spreadsheet with the budget data. The app only has access to files created by it.",
+    "HowItWorksTitle": "How it Works",
     "NoSubscriptions": "No subscriptions.",
     "PrivateByDefault": "Private by default.",
     "SignInFailedTitle": "Sing In failed.",
     "SingInFailedMessage": "Sing In failed, please try again later.",
     "Slogan": "Know exactly where your money is going."
+  },
+
+  "LoadingState": {
+    "Loading": "Loading..."
   },
 
   "MembersManager": {

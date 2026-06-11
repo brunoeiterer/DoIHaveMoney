@@ -58,19 +58,21 @@
     "SelectCategory": "Selecionar Categoria..."
   },
 
-  "LoadingState": {
-    "Loading": "Carregando..."
-  },
-
-  "Login": {
+  "Landing": {
     "BudgetTracker": "Orçamento Pessoal",
     "GoogleSheetsStorage": "Armazenamento no Google Sheets.",
     "Headline": "Orçamento simples movido pelo Google Sheets.",
+    "HowItWorks": "O aplicativo criar a pasta DoIHaveMoney no seu Google Drive e armazena uma planilha do Google Sheets para cada orçamento criado. Depois disso ele le e edita as planilhas com os dados dos seus orçamentos. O aplicativo só tem acesso aos arquivos criados por ele mesmo.",
+    "HowItWorksTitle": "Como Funciona",
     "NoSubscriptions": "Sem mensalidade.",
     "PrivateByDefault": "Privado por padrão.",
     "SignInFailedTitle": "Falha ao entrar.",
     "SingInFailedMessage": "Falha ao entrar,  por favor, tente novamente mais tarde.",
     "Slogan": "Saiba exatamente para onde está indo seu dinheiro."
+  },
+
+  "LoadingState": {
+    "Loading": "Carregando..."
   },
 
   "MembersManager": {

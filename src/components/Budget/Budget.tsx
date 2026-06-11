@@ -67,15 +67,6 @@ export function Budget() {
     );
   };
 
-  const formatDisplayMonth = (yearMonth: string) => {
-    const [year, month] = yearMonth.split("-").map(Number);
-    const date = new Date(year, month - 1, 1);
-    return date.toLocaleDateString(navigator.language, {
-      month: "long",
-      year: "numeric",
-    });
-  };
-
   return (
     <Container size="lg" py="xl" pos="relative">
       <Button
@@ -126,7 +117,7 @@ export function Budget() {
             <IconChevronLeft size={20} />
           </ActionIcon>
           <Text fw={700} size="lg" style={{ textTransform: "capitalize" }}>
-            {formatDisplayMonth(currentMonth)}
+            {currentMonth}
           </Text>
           <ActionIcon variant="subtle" size="lg" onClick={handleNextMonth}>
             <IconChevronRight size={20} />
