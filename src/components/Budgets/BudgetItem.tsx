@@ -138,7 +138,7 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
             currentUserEmail={user?.email ?? ""}
             isOwner={false}
             budgetId={budgetFile.id}
-            onRemoveMember={async (permissionId) => {}}
+            onRemoveMember={async () => {}}
             onClose={() => setIsMembersSelected(false)}
             setIsloading={setIsloading}
           />

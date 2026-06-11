@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthContext/AuthContext";
 import { deleteBudgetSpreadsheet } from "../lib/googleDriveApi";
+import { getAccessToken } from "../context/AuthContext/AuthGlobal";
 
 export function useDeleteBudget() {
-  const { accessToken } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (spreadsheetId: string) => {
-      if (!accessToken) throw new Error("No access token available");
-      return deleteBudgetSpreadsheet(spreadsheetId, accessToken);
+      return deleteBudgetSpreadsheet(spreadsheetId);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["budgets", accessToken] });
+      queryClient.invalidateQueries({
+        queryKey: ["budgets", getAccessToken()],
+      });
     },
   });
 }

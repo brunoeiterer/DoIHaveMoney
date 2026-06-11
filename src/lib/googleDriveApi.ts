@@ -290,13 +290,12 @@ export async function getSpreadsheetMetadata(spreadsheetId: string) {
   return { title, sheetMap };
 }
 
-export async function shareBudgetFile(
-  shareData: {
-    spreadSheetId: string;
-    email: string;
-  },
-  accessToken: string,
-) {
+export async function shareBudgetFile(shareData: {
+  spreadSheetId: string;
+  email: string;
+}) {
+  const accessToken = getAccessToken();
+
   const url = `https://www.googleapis.com/drive/v3/files/${shareData.spreadSheetId}/permissions?sendNotificationEmail=true`;
 
   const response = await fetch(url, {
