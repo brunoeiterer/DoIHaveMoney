@@ -7,7 +7,7 @@ export function useCreateBudget(folderId: string) {
 
   return useMutation({
     mutationFn: async (budgetName: string) => {
-      if (folderId) throw new Error("Missing folder ID");
+      if (!folderId) throw new Error("Missing folder ID");
       return createBudgetSpreadsheet(budgetName, folderId);
     },
     onSuccess: () => {
