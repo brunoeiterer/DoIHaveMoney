@@ -85,6 +85,8 @@
     "RemoveMember": "Remover",
     "Role": "Função",
     "Share": "Compartilhar",
+    "ShareSuccessfulTitle": "Orçamento Compartilhado",
+    "ShareSuccessful": "Um email com o convite foi enviado.",
     "writer": "Membro",
     "You": "Você"
   },

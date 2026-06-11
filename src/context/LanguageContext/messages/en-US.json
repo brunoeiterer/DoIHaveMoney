@@ -20,9 +20,7 @@
   "BudgetItem": {
     "ConfirmDeletionInput": "To confirm deletion, type <strong>{name}</strong> below:",
     "DeleteForever": "Delete Forever",
-    "Email": "Email",
-    "EnterEmail": "Type the email",
-    "Share": "Share"
+    "EnterEmail": "Type the email"
   },
 
   "Budgets": {
@@ -79,12 +77,19 @@
   },
 
   "MembersManager": {
+    "Email": "Email",
     "LeaveBudget": "Leave",
     "Members": "Members",
     "NoMembersFound": "No members found.",
+    "owner": "Owner",
     "User": "User",
     "RemoveMember": "Remove",
-    "Role": "Role"
+    "Role": "Role",
+    "Share": "Share",
+    "ShareSuccessfulTitle": "Budget Shared",
+    "ShareSuccessful": "An email was sent with the invite.",
+    "writer": "Member",
+    "You": "You"
   },
 
   "MonthlyTotals": {

@@ -16,6 +16,7 @@ import { IconTrash, IconLogout } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import { isValidEmail } from "../../lib/utils";
 import { useShareBudget } from "../../hooks/useShareBudget";
+import { notifications, showNotification } from "@mantine/notifications";
 
 interface MembersManagerProps {
   permissions: { role: string; emailAddress: string }[];
@@ -51,6 +52,21 @@ export function MembersManager({
     }
   };
 
+  const handleShare = async () => {
+    setIsloading(true);
+    await shareBuget({
+      spreadSheetId: budgetId,
+      email: emailInput,
+    });
+    setIsloading(false);
+
+    notifications.show({
+      title: t("ShareSuccessfulTitle"),
+      message: t("ShareSuccessful"),
+      color: "emerald",
+    });
+  };
+
   return (
     <Paper withBorder p="md" radius="md" h={"500px"}>
       <Group justify="space-between" mb="md">
@@ -66,26 +82,14 @@ export function MembersManager({
           onChange={(e) => setEmailInput(e.currentTarget.value)}
           onKeyDown={async (e) => {
             if (e.key === "Enter" && isValidEmail(emailInput)) {
-              setIsloading(true);
-              await shareBuget({
-                spreadSheetId: budgetId,
-                email: emailInput,
-              });
-              setIsloading(false);
+              await handleShare();
             }
           }}
         />
         <Button
           color="emerald"
           disabled={!isValidEmail(emailInput)}
-          onClick={async () => {
-            setIsloading(true);
-            await shareBuget({
-              spreadSheetId: budgetId,
-              email: emailInput,
-            });
-            setIsloading(false);
-          }}
+          onClick={handleShare}
         >
           {t("Share")}
         </Button>
