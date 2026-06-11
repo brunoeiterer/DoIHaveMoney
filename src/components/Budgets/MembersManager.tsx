@@ -16,7 +16,7 @@ import { IconTrash, IconLogout } from "@tabler/icons-react";
 import { useLanguage } from "../../context/LanguageContext/LanguageContext";
 import { isValidEmail } from "../../lib/utils";
 import { useShareBudget } from "../../hooks/useShareBudget";
-import { notifications, showNotification } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 
 interface MembersManagerProps {
   permissions: { role: string; emailAddress: string }[];
