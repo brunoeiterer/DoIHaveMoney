@@ -26,8 +26,9 @@
   "Budgets": {
     "Budgets": "Orçamentos",
     "CreateNewBudget": "Criar novo orçamento",
+    "ImportBudget": "Importar orçamento",
     "NoBudgetsFound": "Nenhum orçamento encontrado no seu Google Drive.",
-    "SelectOrCreate": "Selecione um orçamento ou crie um novo para começar.",
+    "SelectOrCreate": "Selecione um orçamento, importe um orçamento compartilhado com você do seu Google Drive ou crie um novo para começar.",
     "SyncErrorTitle": "Erro",
     "SyncErrorMessage": "Um erro ocorreu ao carregar os orçamentos. Por favor, recarregue a página.",
     "YourBudgets": "Seus Orçamentos"

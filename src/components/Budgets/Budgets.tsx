@@ -15,15 +15,20 @@ import { CreateNewBudget } from "../CreateNewBudget";
 import { useBudgets } from "../../hooks/useBudgets";
 import { useCreateBudget } from "../../hooks/useCreateBudget";
 import { LoadingState } from "../LoadingState";
-import { IconPlus } from "@tabler/icons-react";
+import { IconFileImport, IconPlus } from "@tabler/icons-react";
 import { BudgetItem } from "./BudgetItem";
+import {
+  DrivePicker,
+  DrivePickerDocsView,
+} from "@googleworkspace/drive-picker-react";
 
 export function Budgets() {
   const { t } = useLanguage("Budgets");
 
-  const { budgets, isFetching, error, folderId } = useBudgets();
+  const { budgets, isFetching, error, folderId, refetch } = useBudgets();
   const createBudget = useCreateBudget(folderId ?? "");
   const [isCreating, setIsCreating] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
 
   const handleCreateNewBudgetClose = () => {
     setIsCreating(false);
@@ -31,6 +36,11 @@ export function Budgets() {
 
   const handleCreateBudget = async (name: string) => {
     await createBudget.mutateAsync(name);
+  };
+
+  const handleImport = () => {
+    setIsImporting(false);
+    refetch();
   };
 
   useEffect(() => {
@@ -91,6 +101,31 @@ export function Budgets() {
                   >
                     {t("CreateNewBudget")}
                   </Button>
+                )}
+                <Button
+                  size="lg"
+                  mt="md"
+                  fullWidth
+                  variant="filled"
+                  leftSection={<IconFileImport />}
+                  onClick={() => setIsImporting(true)}
+                >
+                  {t("ImportBudget")}
+                </Button>
+
+                {isImporting && (
+                  <DrivePicker
+                    client-id="1044533121358-2rs5bvb5cinl5s4lj4srncvon1tavvk3.apps.googleusercontent.com"
+                    app-id="1044533121358"
+                    onPicked={handleImport}
+                    onCanceled={() => setIsImporting(false)}
+                  >
+                    <DrivePickerDocsView
+                      include-folders="true"
+                      view-id="SPREADSHEETS"
+                      mime-types="application/vnd.google-apps.spreadsheet"
+                    />
+                  </DrivePicker>
                 )}
               </Stack>
             )}

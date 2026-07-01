@@ -18,7 +18,10 @@ interface DriveFile {
 export function useBudgets() {
   const accessToken = getAccessToken();
 
-  const { data, isFetching, error } = useQuery<FetchBudgetsResponse, Error>({
+  const { data, isFetching, error, refetch } = useQuery<
+    FetchBudgetsResponse,
+    Error
+  >({
     queryKey: ["budgets", accessToken],
 
     queryFn: async () => {
@@ -132,5 +135,6 @@ export function useBudgets() {
     folderId: data?.folderId || null,
     isFetching,
     error: error ? error.message : null,
+    refetch,
   };
 }

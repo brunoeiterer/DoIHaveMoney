@@ -26,8 +26,9 @@
   "Budgets": {
     "Budgets": "Budgets",
     "CreateNewBudget": "Create new budget",
+    "ImportBudget": "Import Budget",
     "NoBudgetsFound": "No budgets found in your Google Drive.",
-    "SelectOrCreate": "Select an existing budget or create a new one to get started.",
+    "SelectOrCreate": "Select an existing budget, import a budget shared with you from your Google Drive or create a new one to get started.",
     "SyncErrorTitle": "Error",
     "SyncErrorMessage": "Failed to load the budgets. Please refresh the page.",
     "YourBudgets": "Your Budgets"
