@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Button,
   CloseButton,
   Collapse,
@@ -7,6 +8,7 @@ import {
   Stack,
   Text,
   TextInput,
+  UnstyledButton,
 } from "@mantine/core";
 import { IconTrash, IconUsersGroup } from "@tabler/icons-react";
 import { useState } from "react";
@@ -47,39 +49,46 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
 
   return (
     <Stack>
-      <Group>
-        <Button
-          key={budgetFile.id}
-          variant="default"
-          size="xl"
-          onClick={() =>
-            navigate(`/budgets/${budgetFile.id}`, {
-              state: {
-                budgetFile: budgetFile,
-              },
-            })
-          }
-          style={{ flex: 1 }}
-        >
-          {budgetFile.name}
-        </Button>
-        <Button
-          key={`${budgetFile.id}-delete`}
-          variant="filled"
-          size="xl"
-          onClick={handleSelectForDelete}
-        >
-          <IconTrash />
-        </Button>
-        <Button
-          key={`${budgetFile.id}-members`}
-          variant="filled"
-          size="xl"
-          onClick={handleSelectMembers}
-        >
-          <IconUsersGroup />
-        </Button>
-      </Group>
+      <Paper withBorder p="md" radius="md" shadow="sm">
+        <Group wrap="nowrap" align="center" justify="space-between">
+          <UnstyledButton
+            onClick={() =>
+              navigate(`/budgets/${budgetFile.id}`, {
+                state: { budgetFile: budgetFile },
+              })
+            }
+            style={{ flex: 1 }}
+          >
+            <Text size="lg" fw={600}>
+              {budgetFile.name}
+            </Text>
+          </UnstyledButton>
+
+          <Group wrap="nowrap" gap="xs">
+            <ActionIcon
+              key={`${budgetFile.id}-members`}
+              variant="subtle"
+              size="lg"
+              radius="md"
+              onClick={handleSelectMembers}
+              aria-label="Manage members"
+            >
+              <IconUsersGroup size="1.2rem" stroke={1.5} />
+            </ActionIcon>
+
+            <ActionIcon
+              key={`${budgetFile.id}-delete`}
+              variant="subtle"
+              size="lg"
+              radius="md"
+              onClick={handleSelectForDelete}
+              aria-label="Delete budget"
+            >
+              <IconTrash size="1.2rem" stroke={1.5} />
+            </ActionIcon>
+          </Group>
+        </Group>
+      </Paper>
       <Collapse expanded={isSelectedForDelete}>
         {isLoading ? (
           <LoadingState />
