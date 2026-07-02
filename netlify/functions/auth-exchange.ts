@@ -37,6 +37,7 @@ export default async (req: Request) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
+      maxAge: 15768000,
     });
     headers.append("Set-Cookie", tokenCookie);
   }
