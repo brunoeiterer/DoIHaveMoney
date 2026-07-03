@@ -128,7 +128,7 @@ export function ExpensesManager({
             label={t("Category")}
             placeholder={t("SelectCategory")}
             data={categories.map((c) => ({ value: c.name, label: c.name }))}
-            value={expense.category}
+            value={expense.category != "" ? expense.category : null}
             onChange={(value) =>
               SetExpense({
                 ...expense,
