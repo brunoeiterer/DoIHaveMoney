@@ -49,7 +49,7 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
 
   return (
     <Stack>
-      <Paper withBorder p="md" radius="md" shadow="sm">
+      <Paper withBorder radius="md" shadow="sm">
         <Group wrap="nowrap" align="center" justify="space-between">
           <UnstyledButton
             onClick={() =>
@@ -57,7 +57,7 @@ export function BudgetItem({ budgetFile }: BudgetItemProps) {
                 state: { budgetFile: budgetFile },
               })
             }
-            style={{ flex: 1 }}
+            style={{ flex: 1, padding: "1rem" }}
           >
             <Text size="lg" fw={600}>
               {budgetFile.name}
