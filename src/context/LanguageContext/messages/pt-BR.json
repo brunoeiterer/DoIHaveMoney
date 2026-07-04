@@ -94,8 +94,10 @@
 
   "MonthlyTotals": {
     "Day": "Dia",
+    "MonthTotal": "Total do Mês",
     "MonthlyTotals": "Totais do Mês",
     "NoExpensesForMonth": "Nenhum gasto este mês.",
+    "RecurringTotal": "Total Recorrente",
     "TotalSpent": "Total Gasto"
   },
 

@@ -53,6 +53,11 @@ export function MonthlyTotals({
     overallTotal += total;
   });
 
+  const recurringTotal = recurringExpenses.reduce(
+    (acc, expense) => acc + expense.amount,
+    0,
+  );
+
   const maxRows =
     activeCategories.length > 0
       ? Math.max(...activeCategories.map((cat) => groupedExpenses[cat].length))
@@ -75,7 +80,25 @@ export function MonthlyTotals({
   return (
     <Paper withBorder p="md" radius="md" mt="xl">
       <Group justify="space-between" mb="md">
-        <Title order={4}>{t("MonthlyTotals")}</Title>
+        <Title order={4} flex={"1"}>
+          {t("MonthlyTotals")}
+        </Title>
+        <Group gap="xs">
+          <Text size="sm" c="dimmed">
+            {t("RecurringTotal")}
+          </Text>
+          <Badge size="lg" color="red" variant="light">
+            ${recurringTotal.toFixed(2)}
+          </Badge>
+        </Group>
+        <Group gap="xs">
+          <Text size="sm" c="dimmed">
+            {t("MonthTotal")}
+          </Text>
+          <Badge size="lg" color="red" variant="light">
+            ${(overallTotal - recurringTotal).toFixed(2)}
+          </Badge>
+        </Group>
         <Group gap="xs">
           <Text size="sm" c="dimmed">
             {t("TotalSpent")}
